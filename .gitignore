@@ -2,6 +2,7 @@
 # Julia
 Manifest.toml
 LocalPreferences.toml
+GridapWorkshop.so
 
 # Generated stuff
 notebooks
