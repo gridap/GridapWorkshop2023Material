@@ -50,9 +50,9 @@ First, we will need to log into Gadi. You will have received an email with your 
 ssh aaa777@gadi.nci.org.au
 ```
 
-when prompted, enter your password. You should now be logged into Gadi and located in your home directory. We would also recommend setting up passwordless ssh access to Gadi (but it is not required).
+When prompted, enter your password. You should now be logged into Gadi and located in your home directory. We would also recommend setting up passwordless ssh access to Gadi (but it is not required).
 
-Additionally to your home directory, you have access to a scratch space, a project-wide shared filesystem that is optimized for parallel access. This is where we will be working during the workshop. Start by creating a personal folder within the project's scratch space and linking it back to your home directory:
+In addition to your home directory, you have access to a scratch space, a project-wide shared filesystem that is optimized for parallel access. This is where we will be working during the workshop. Start by creating a personal folder within the project's scratch space and linking it back to your home directory:
 
 ```bash
   mkdir /scratch/vp91/$USER
