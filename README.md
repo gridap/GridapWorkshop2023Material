@@ -4,7 +4,7 @@
 
 ### Required software
 
-Before being able to work on the workshop material, you will need to instal the following software:
+Before being able to work on the workshop material, you will need to install the following software:
 
 - Install [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), the version control system we will use. **For Windows users, we strongly recommend installing [git for Windows](https://gitforwindows.org/). This will also install a bash shell, which will allow you to follow the rest of the installation instructions verbatim.**
 - Install [Julia](https://julialang.org/downloads/platform/).
