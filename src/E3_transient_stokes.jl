@@ -196,10 +196,12 @@ xₕₜ = solve(ode_solver,op,x₀,t₀,T)
 
 # We should highlight that `xₕₜ` is just an _iterable_ function and the results at each time steps are only computed when iterating over it, i.e., lazily. We can post-process the results and generate the corresponding `vtk` files using the `createpvd` and `createvtk` functions. The former will create a `.pvd` file with the collection of `.vtu` files saved at each time step by `createvtk`. The computation of the problem solutions will be triggered in the following loop:
 
-createpvd("transient_stokes_solution") do pvd
+using DrWatson
+out_file = datadir("transient_stokes")
+createpvd(out_file) do pvd
   for (xₕ,t) in xₕₜ
     (uₕ,pₕ) = xₕ
-    pvd[t] = createvtk(Ωₕ,"transient_stokes_solution_$t"*".vtu",cellfields=["u"=>uₕ,"p"=>pₕ])
+    pvd[t] = createvtk(Ωₕ,out_file*"_$t.vtu",cellfields=["uh"=>uₕ,"ph"=>pₕ])
   end
 end
 

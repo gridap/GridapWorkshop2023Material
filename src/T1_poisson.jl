@@ -136,10 +136,11 @@ solver = LinearFESolver(ls)
 uh = solve(solver,op)
 
 # The `solve` function returns the computed numerical solution `uh`. This object is an instance of `FEFunction`, the type used to represent a function in a FE space. We can inspect the result by writing it into a `vtk` file:
+using DrWatson
+out_file = datadir("poisson")
+writevtk(Ω,out_file,cellfields=["uh"=>uh])
 
-writevtk(Ω,"results",cellfields=["uh"=>uh])
-
-#  which will generate a file named `results.vtu` having a nodal field named `"uh"` containing the solution of our problem (see next figure).
+#  which will generate a file named `poisson.vtu` having a nodal field named `"uh"` containing the solution of our problem (see next figure).
 #
 # ![](../figures/poisson/fig_uh.png)
 #
