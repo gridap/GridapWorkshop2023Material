@@ -2,7 +2,7 @@ using Literate
 ## include Literate scripts starting with following letters in the deploy
 incl = ""
 ## Set `sol=true` to produce output with solutions contained and hints stripts. Otherwise the other way around.
-sol = false
+sol = true
 ##
 notebooks_folder = "../notebooks"
 scripts_folder = "../scripts"
@@ -47,7 +47,7 @@ end
 "Use as `preproces` function to remove `#sol`-lines & just remote `#tag`-tag"
 function rm_sol(str)
     str = process_hashtag(str, "#sol=", line->"")
-    str = process_hashtag(str, "#hint=", line->line * "\n")
+    str = process_hashtag(str, "#hint=", line->"#" * line * "\n")
     return str
 end
 "Use as `preproces` function to remove `#hint`-lines & just remote `#sol`-tag"
@@ -62,12 +62,13 @@ for fl in readdir()
         continue
     end
 
-    # create ipynb
+    # Render
+    Literate.notebook(fl, notebooks_folder, credit=false, execute=false, mdstrings=true, preprocess=rm_sol)
+    Literate.script(fl, scripts_folder, credit=false, execute=false, mdstrings=true, preprocess=rm_sol)
     if sol
-        Literate.notebook(fl, notebooks_folder, credit=false, execute=false, mdstrings=true, preprocess=rm_hint)
-        Literate.script(fl, scripts_folder, credit=false, execute=false, mdstrings=true, preprocess=rm_hint)
-    else
-        Literate.notebook(fl, notebooks_folder, credit=false, execute=false, mdstrings=true, preprocess=rm_sol)
-        Literate.script(fl, scripts_folder, credit=false, execute=false, mdstrings=true, preprocess=rm_sol)
+        notebooks_sol_folder = string(notebooks_folder,"-solutions")
+        scripts_sol_folder = string(scripts_folder,"-solutions")
+        Literate.notebook(fl, notebooks_sol_folder, credit=false, execute=false, mdstrings=true, preprocess=rm_hint)
+        Literate.script(fl, scripts_sol_folder, credit=false, execute=false, mdstrings=true, preprocess=rm_hint)
     end
 end
