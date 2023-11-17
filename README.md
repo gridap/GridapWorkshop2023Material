@@ -1,8 +1,6 @@
 # GridapWorkshop2023Material
 
-## Before the workshop
-
-### Required software
+## Required software
 
 Before being able to work on the workshop material, you will need to install the following software:
 
@@ -12,7 +10,7 @@ Before being able to work on the workshop material, you will need to install the
 - Install [Paraview](https://www.paraview.org/download/), or any other software that can read and display `.vtk` files.
 - Finally, you will need an **ssh** client to connect to Gadi. Generally, every modern OS should have one installed by default. To check if you have one, open a terminal and type `ssh`. If a message like `usage: ssh ...` appears, you are good to go.
 
-### Getting the workshop material
+## Getting the workshop material
 
 To get the workshop material (available [here](https://github.com/gridap/GridapWorkshop2023Material)) you can either download it as a zip file or clone (and optionally fork) the repository using git. We strongly recommend the latter.
 
@@ -24,7 +22,7 @@ If your system has an ssh client, you can clone the repository by using
 
 Alternative methods to clone the repository can be found [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 
-### Setting up the environment on your local computer
+## Setting up the environment on your local computer
 
 Move into the newly cloned repository and start Julia by typing
 
@@ -42,7 +40,7 @@ to install and precompile all the packages needed for the workshop. This may tak
 
 More information on Julia Environments can be found [here](https://pkgdocs.julialang.org/v1/environments/).
 
-### Setting up the environment on Gadi
+## Setting up the environment on Gadi
 
 First, we will need to log into Gadi. You will have received an email with your username and password (which you should change). If your username is `aaa777`, you can connect to Gadi by typing
 
@@ -59,7 +57,7 @@ In addition to your home directory, you have access to a scratch space, a projec
   ln -s /scratch/vp91/$USER $HOME/scratch
 ```
 
-Move into your newly created scratch directory and clone the workshop repository as described above. Once the workshop repository is cloned, load the Gadi environment by running
+Move into your newly created scratch directory and clone the workshop repository as described above. Once the workshop repository is cloned, move into the `/gadi` subdirectory. This directory contains the distributed codes we will be using. Load the Gadi environment by running
 
 ```bash
   source modules.sh
@@ -68,14 +66,45 @@ Move into your newly created scratch directory and clone the workshop repository
 The script `modules.sh` has several purposes, and needs to be sourced every time you log in. It loads the julia module, the Intel-MPI modules, and sets up some environment variables we will need.
 
 Next, repeat the steps described in the previous section to setup the Julia environment in serial.
-In addition, you will need to setup the environment for parallel. To do so, run from the workshop directory
+In addition, you will need to setup the environment for parallel. To do so, run
 
 ```bash
   julia --project=. -e 'using MPIPreferences; MPIPreferences.use_system_binary()'
   julia --project=. -e 'using Pkg; Pkg.build()'
 ```
 
-The first line sets up MPI.jl to work with the Intel-MPI binaries installed on Gadi instead of the julia-specific artifacts. The second line does the same for GridapPETSc and GridapP4est, which are the Gridap wrappers for PETSc and P4est, respectively.
+The first line sets up `MPI.jl` to work with the Intel-MPI binaries installed on Gadi instead of the julia-specific artifacts. The second line does the same for `GridapPETSc.jl` and `GridapP4est.jl`, which are the Gridap wrappers for PETSc and P4est, respectively.
 
-### Creating a system image
+## Creating a system image
 
+Unfortunately, there is distributed version of the Julia REPL. This means running MPI codes interactively is not possible. Moreover, Julia notoriously suffers from long TTFX (Time To First eXecution) times due to Just-In-Time compilation. Although this problem is beign the focuss of the latest releases, it can still be tedious to work within an edit-run-debug cycle.
+
+To alleviate this problem, we will create a system image that contains all the packages we will need during the workshop. This will allow us to start julia with the system image preloaded, and thus avoid the long TTFX times.
+
+The `/gadi/compilation` directory contains files that allow us to do just that using [`PackageCompiler.jl`](https://julialang.github.io/PackageCompiler.jl/stable/). Although we will be creating a sysimage (to be used with Julia), this package also has options to create dynamic libraries (to be used with C/C++/Fortran) and executables.
+
+First, we will need to install `PackageCompiler` package. It does not need to be installed within the project, so just run
+
+```bash
+  julia -e 'using Pkg; Pkg.add("PackageCompiler")'
+```
+
+Next, run the following commands from the `/gadi` directory to create the system image
+
+```bash
+  julia --project=. compilation/compile.jl
+```
+
+This will take a while (around 5/6 mins), and will create a system image `GadiTutorial.so` in the `/gadi` directory. You can then test this sysimage by running
+
+```bash
+  julia --project=. -JGadiTutorial.so compilation/warmup.jl
+```
+
+Alternatively, we have also provided a BATCH script that creates the system image on a compute node. This is useful if the architecture of the compute nodes is different from the login nodes (for instance, when running on GPU nodes). It is also good practice to not run heavy computations on the login nodes. To run compile remotely, run
+
+```bash
+  qsub compilation/compile.sh
+```
+
+You can see the status of the job by running `qstat`.
