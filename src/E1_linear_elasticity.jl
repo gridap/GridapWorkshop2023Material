@@ -46,7 +46,7 @@ model = GmshDiscreteModel(msh_file_gmsh)
 # This model contains the mesh and the physical tags of the model, which have been created directly through `Gmsh`. Another option would be to create the a complicated model using Gridap, then exporting to `.json` format in the followig way: 
 
 using Gridap.Io
-msh_file_json = projectdir("meshes/elasticity.msh")
+msh_file_json = projectdir("meshes/elasticity.json")
 to_json_file(model,msh_file_json)
 
 # We can then load the saved model
@@ -57,13 +57,14 @@ model = DiscreteModelFromFile(msh_file_json)
 #
 # _Write the model to vtk and open the resulting files with Paraview. Visualize the faces of the model and color them by each of the available fields. Identify the field names representing the boundaries $\Gamma_{\rm B}$ and $\Gamma_{\rm G}$._
 
+#hint= # Solution for exercise 1
 #sol=writevtk(model,"model")
 
 # ## Set up the vector-valued FE space with Dirichlet BCs in selected components
 #
 # We will construct the vector-valued test FE space as follows:
 #
-# ```
+# ```julia
 # order = 1
 # reffe = ReferenceFE(lagrangian,VectorValue{3,Float64},order)
 # V0 = TestFESpace(model,reffe;
@@ -84,18 +85,20 @@ model = DiscreteModelFromFile(msh_file_json)
 #
 # _Fill in the `dirichlet_tags` using the tag names identified in **Exercise 2** for $\Gamma_{\rm B}$ and $\Gamma_{\rm G}$._
 #
-#hint=# **Hint:** The general input format of `dirichlet_tags` is a one-dimensional array of tag name strings `["tag_name_1",...,"tag_name_n"]`.
+#hint= **Hint:** The general input format of `dirichlet_tags` is a one-dimensional array of tag name strings `["tag_name_1",...,"tag_name_n"]`.
 
+#hint=# Solution for exercise 2
 #sol=dirichlet_tags = ["surface_1","surface_2"]
 
 # ### Exercise 3
 #
 # _Fill in the `dirichlet_masks` to select the displacement components to constrain._
 #
-#hint# **Hint:** The general input format of `dirichlet_masks` is a one-dimensional array with the same length and order as `dirichlet_tags`. Each entry of `dirichlet_masks` is a boolean tuple of length the problem dimension `D`, i.e. `(bool_x1,...,bool_xD)`. If `bool_xi == true`, then the `xi` component of the displacement is constrained, otherwise it is free. Beware of passing the `dirichlet_masks` in the same order as the `dirichlet_tags`.
+#hint= **Hint:** The general input format of `dirichlet_masks` is a one-dimensional array with the same length and order as `dirichlet_tags`. Each entry of `dirichlet_masks` is a boolean tuple of length the problem dimension `D`, i.e. `(bool_x1,...,bool_xD)`. If `bool_xi == true`, then the `xi` component of the displacement is constrained, otherwise it is free. Beware of passing the `dirichlet_masks` in the same order as the `dirichlet_tags`.
 #
 # Recall that we constrain only the first component on the boundary $\Gamma_{\rm B}$, whereas we constrain all components on $\Gamma_{\rm G}$.
 
+#hint=# Solution for exercise 3
 #sol=dirichlet_masks=[(true,false,false), (true,true,true)]
 
 # We can now instantiate the vector-valued test FE space.
@@ -113,8 +116,9 @@ V0    = TestFESpace(model,reffe;
 #
 # _Define the Dirichlet functions according to the problem statement._
 #
-#hint=# **Hint:** The functions must be vector-valued with the format `VectorValue(val_x1,...,val_xD)`.
+#hint= **Hint:** The functions must be vector-valued with the format `VectorValue(val_x1,...,val_xD)`.
 
+#hint=# Solution for exercise 4
 #sol=g1(x) = VectorValue(0.005,0.0,0.0)
 #sol=g2(x) = VectorValue(0.0,0.0,0.0)
 
@@ -122,8 +126,9 @@ V0    = TestFESpace(model,reffe;
 #
 # _Define the trial FE space `U`._
 #
-#hint=# **Hint:** Pass the Dirichlet functions in a one-dimensional array, in the same order as `dirichlet_tags` and `dirichlet_masks`.
+#hint= **Hint:** Pass the Dirichlet functions in a one-dimensional array, in the same order as `dirichlet_tags` and `dirichlet_masks`.
 
+#hint=# Solution for exercise 5
 #sol=U = TrialFESpace(V0,[g1,g2])
 
 # We will now visually check the Dirichlet values are being correctly assigned on the Dirichlet boundaries.
@@ -132,6 +137,7 @@ V0    = TestFESpace(model,reffe;
 #
 # _Create a `BoundaryTriangulation` of the Dirichlet boundaries._
 
+#hint=# Solution for exercise 6
 #sol=Γ = BoundaryTriangulation(model,tags=dirichlet_tags)
 
 # Next, we create a FE Function of `U` with zero-valued free values.
@@ -142,6 +148,7 @@ vh = zero(U)
 #
 # _Plot `vh` on the Dirichlet boundaries using `writevtk`_
 
+#hint=# Solution for exercise 7
 #sol=writevtk(Γ,"check-trial-fe-space",cellfields=["vh"=>vh])
 
 # The plot of the x-component of `vh` should look as follows.

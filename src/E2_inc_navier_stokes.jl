@@ -74,8 +74,8 @@
 # ### Exercise 1
 # 
 # _Create a discrete model of a $100\times100$ Cartesian mesh of the unit square. Then create two new boundary tags,  namely `"diri1"` and `"diri0"`, one for the top side of the square (where the velocity is non-zero), and another for the rest of the boundary (where the velocity is zero)._
-#hint=# **Hint:** Use the function `add_tag_from_tags!` to construct new boundary tags from pre-existing cartesian tags. Remember that the cartesian tags are in lexicographic order.
-#hint=# **Hint:** You can also print the model to `.vtk` and visualize the tags with Paraview.
+#hint= **Hint:** Use the function `add_tag_from_tags!` to construct new boundary tags from pre-existing cartesian tags. Remember that the cartesian tags are in lexicographic order.
+#hint= **Hint:** You can also print the model to `.vtk` and visualize the tags with Paraview.
 
 using Gridap
 #sol=n = 100
@@ -94,6 +94,7 @@ using Gridap
 #
 # _Create a standard vector-valued continuous Lagrangian test FE space of second order that is constrained at the `diri0` and `diri1` regions._
 
+#hint=# Solution of exercise 2
 #sol=D = 2
 #sol=order = 2
 #sol=reffeᵤ = ReferenceFE(lagrangian,VectorValue{D,Float64},order)
@@ -112,6 +113,7 @@ Q = TestFESpace(model,reffeₚ,conformity=:L2,constraint=:zeromean)
 #
 #hint= **Hint:** Remember to create the functions prescribing the Dirichlet values at the `diri0` and `diri1` regions.
 
+#hint=# Solution of exercise 3
 #sol=uD0 = VectorValue(0,0)
 #sol=uD1 = VectorValue(1,0)
 #sol=U = TrialFESpace(V,[uD0,uD1])

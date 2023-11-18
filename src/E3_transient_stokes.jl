@@ -63,6 +63,7 @@
 #
 # _Load Gridap and create a $50\times50$ Cartesian grid of the unit square._
 
+#hint=# Solution of exercise 1
 #sol= using Gridap
 #sol= n = 50
 #sol= domain = (0,1,0,1)
@@ -81,6 +82,7 @@
 #hint= - The spaces of test functions are constant in time and are defined as in steady problems.
 #hint= - Use the tag `boundary` to set up Dirichlet BCs for the velocity everywhere on the boundary $\partial \Omega$.
 
+#hint=# Solution of exercise 2
 #sol=D = 2
 #sol=order = 2
 #sol=reffeᵤ = ReferenceFE(lagrangian,VectorValue{D,Float64},order)
@@ -131,8 +133,9 @@ dΩ = Measure(Ωₕ,degree)
 # _Write the expressions for the vector-valued function `f` and the scalar function `g` as written above. Like `u` before, they must be time-dependent functions that return a space-only function._
 #
 
-f(t::Real) = x -> VectorValue(x[1]+t,x[2]-t)
-g(t::Real) = x -> 2*t
+#hint=# Solution of exercise 3
+#sol=f(t::Real) = x -> VectorValue(x[1]+t,x[2]-t)
+#sol=g(t::Real) = x -> 2*t
 
 # Alternatively, we can use automatic differentiation to get directly `f` and `g`. In order to do that, we must define `p` before.
 
@@ -156,6 +159,7 @@ g_AD(t::Real) = x -> (∇⋅u(t))(x)
 #
 #hint= **Hint:** The only variables needing an explicit time dependency are the source terms `f` and `g`.
 
+#hint=# Solution of exercise 4
 #sol=m(t,(ut,p),(v,q)) = ∫( ut⋅v )dΩ
 #sol=a(t,(u,p),(v,q))  = ∫( ∇(u)⊙∇(v) - (∇⋅v)*p + q*(∇⋅u) )dΩ
 #sol=b(t,(v,q))        = ∫( f(t)⋅v )dΩ + ∫( g(t)*q )dΩ
@@ -178,6 +182,7 @@ ls = LUSolver()
 #
 #hint= **Hint:** Use `methods(ThetaMethod)` to get the signature of the `ThetaMethod` constructor. Note that the `nls` variable in the constructor is a `NonlinearSolver` and `LinearSolver <: NonlinearSolver`.
 
+#hint=# Solution of exercise 5
 #sol=dt = 0.1
 #sol=θ = 0.5
 #sol=ode_solver = ThetaMethod(ls,dt,θ)
