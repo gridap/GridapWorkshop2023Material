@@ -7,7 +7,7 @@
 #
 # We want to solve a linear elasticity problem defined on the 3D domain depicted in next figure.
 #
-# ![](solid.png)
+# ![](../figures/elasticity/solid.png)
 #
 # We impose the following boundary conditions. All components of the displacement vector are constrained to zero on the surface $\Gamma_{\rm G}$, which is marked in green in the figure. On the other hand, the first component of the displacement vector is prescribed to the value $\delta\doteq 5$mm on the surface $\Gamma_{\rm B}$, which is marked in blue. No body or surface forces are included in this example. Formally, the PDE to solve is
 #
@@ -53,11 +53,17 @@ to_json_file(model,msh_file_json)
 
 model = DiscreteModelFromFile(msh_file_json)
 
+# You can easily inspect the generated discrete model in [Paraview](https://www.paraview.org/) by writing it in `vtk` format.
+
+writevtk(model,datadir("elasticity_model"))
+
+# The previous line generates four different files `model_0.vtu`, `model_1.vtu`, `model_2.vtu`, and `model_3.vtu` containing the vertices, edges, faces, and cells present in the discrete model. Moreover, you can easily inspect which boundaries are defined within the model.
+
 # ### Exercise 1
 #
-# _Write the model to vtk and open the resulting files with Paraview. Visualize the faces of the model and color them by each of the available fields. Identify the field names representing the boundaries $\Gamma_{\rm B}$ and $\Gamma_{\rm G}$._
+# _Open the resulting files with Paraview. Visualize the faces of the model and color them by each of the available fields. Identify the field names representing the boundaries $\Gamma_{\rm B}$ and $\Gamma_{\rm G}$._
 
-#hint= # Solution for exercise 1
+#hint=# Solution for exercise 1
 #sol=writevtk(model,"model")
 
 # ## Set up the vector-valued FE space with Dirichlet BCs in selected components
@@ -153,7 +159,7 @@ vh = zero(U)
 
 # The plot of the x-component of `vh` should look as follows.
 #
-# ![](fig_dbc.png)
+# ![](../figures/elasticity/fig_dbc.png)
 #
 # _Why do the results at the contour of $\Gamma_{\rm B}$ look weird?_
 #
@@ -195,12 +201,12 @@ uh = solve(op)
 
 # Finally, we write the results to a file. Note that we also include the strain and stress tensors into the results file.
 using DrWatson
-out_file = datadir("linear_elasticity")
+out_file = datadir("elasticity_sol")
 writevtk(Ω,out_file,cellfields=["uh"=>uh,"epsi"=>ε(uh),"sigma"=>σ∘ε(uh)])
 
 # If you plot the deformed displacement in ParaView, it can be clearly observed (see next figure) that the surface $\Gamma_{\rm B}$ is pulled in $x_1$-direction and that the solid deforms accordingly.
 #
-# ![](disp_ux_40.png)
+# ![](../figures/elasticity/disp_ux_40.png)
 #
 # ### Bonus exercise
 #
