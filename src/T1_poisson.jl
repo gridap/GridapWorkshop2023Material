@@ -45,7 +45,7 @@
 using Gridap
 using DrWatson
 
-# We also define the analytical solution we will try to retrieve as follows
+# We define the analytical solution we will try to retrieve as follows
 
 u(x) = cos(x[1])*sin(x[2]+π)
 
@@ -148,7 +148,7 @@ solver = LinearFESolver(ls)
 
 uh = solve(solver,op)
 
-# The `solve` function returns the computed numerical solution `uh`. This object is an instance of `FEFunction`, the type used to represent a function in a FE space. We can inspect the result by writing it into a `vtk` file:
+# The `solve` function returns the computed numerical solution `uh`. This object is an instance of `FEFunction`, the type used to represent a function in a FE space. `FEFunction` is part of the `CellField` abstract type, which are objects that represent fields over a triangulated domain. We can inspect the result by writing it into a `vtk` file:
 
 writevtk(Ω,datadir("poisson_sol"),cellfields=["uh"=>uh])
 

@@ -70,35 +70,27 @@
 # ## Creating the discrete model
 #
 # We start with the discretization of the computational domain. We consider a $100\times100$ Cartesian mesh of the unit square.
+#
+# ### Exercise 1
+# 
+# _Create a discrete model of a $100\times100$ Cartesian mesh of the unit square. Then create two new boundary tags,  namely `"diri1"` and `"diri0"`, one for the top side of the square (where the velocity is non-zero), and another for the rest of the boundary (where the velocity is zero)._
+#hint=# **Hint:** Use the function `add_tag_from_tags!` to construct new boundary tags from pre-existing cartesian tags. Remember that the cartesian tags are in lexicographic order.
+#hint=# **Hint:** You can also print the model to `.vtk` and visualize the tags with Paraview.
 
 using Gridap
-n = 100
-domain = (0,1,0,1)
-partition = (n,n)
-model = CartesianDiscreteModel(domain,partition)
+#sol=n = 100
+#sol=domain = (0,1,0,1)
+#sol=partition = (n,n)
+#sol=model = CartesianDiscreteModel(domain,partition)
+#sol=labels = get_face_labeling(model)
+#sol=add_tag_from_tags!(labels,"diri1",[6,])
+#sol=add_tag_from_tags!(labels,"diri0",[1,2,3,4,5,7,8])
 
-# By construction, a `CartesianDiscreteModel` associates with labels every vertex, edge and facet of the model to its parent corner, edge, facet or interior of the grid's bounding box. Label numbering follows the increasing lexicographic order. Thus, in 2D, we get the following numbering:
-#
-# <img src="../figures/stokes/lexicographic.svg" width="240">
-#
-# We use this default order to set up the BCs as follows. For convenience, we create two new boundary tags, namely `"diri1"` and `"diri0"`, one for the top side of the square (where the velocity is non-zero), and another for the rest of the boundary (where the velocity is zero).
-#
-# Gridap provides a convenient way to create new object identifiers (referred to as "tags") from existing ones. First, we need to extract from the model, the object that holds the information about the boundary identifiers (referred to as `FaceLabeling`):
-
-labels = get_face_labeling(model)
-
-# Then, we can add new identifiers (aka "tags") to it. In the next line, we create new tags called `"diri0"` and `"diri1"` combining the default labels of the model to represent top side of the cavity `"diri1"` and the rest of the boundary `"diri0"`.
-
-add_tag_from_tags!(labels,"diri1",[6,])
-add_tag_from_tags!(labels,"diri0",[1,2,3,4,5,7,8])
-
-# Note the usage of `add_tag_from_tags!` to construct new boundary tags gathering lower-level tags.
-#
 # ## Setting up multifield FE spaces
 #
 # For the velocities, we need to create a conventional vector-valued continuous Lagrangian FE space.
 #
-# ### Exercise 1
+# ### Exercise 2
 #
 # _Create a standard vector-valued continuous Lagrangian test FE space of second order that is constrained at the `diri0` and `diri1` regions._
 
@@ -114,7 +106,7 @@ Q = TestFESpace(model,reffeₚ,conformity=:L2,constraint=:zeromean)
 
 # With the options `:Lagrangian`, `space=:P`, `valuetype=Float64`, and `order=order-1`, we select the local polynomial space $P_{k-1}(T)$ on the cells $T\in\mathcal{T}$. With the symbol `space=:P` we specifically chose a local Lagrangian interpolation of type "P". Without using `space=:P`, would lead to a local Lagrangian of type "Q" since this is the default for quadrilateral or hexahedral elements. On the other hand, `conformity=:L2,constraint=:zeromean` leads to a FE space, whose functions are constrained to have mean value equal to zero, which is just what we need for the pressure space.
 #
-# ### Exercise 2
+# ### Exercise 3
 #
 # _Create the trial velocity and pressure FE spaces._
 #
