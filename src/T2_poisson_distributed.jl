@@ -28,7 +28,9 @@ model = CartesianDiscreteModel(ranks,nprocs,domain,ncells)
 # The created `DistributedDiscreteModel` is just a wrapper around a distributed array of 
 # serial models. One can get access to the local models with the method `local_views`, which 
 # is defined for most distributed structures in `GridapDistributed`. 
-display(local_views(model))
+
+local_models = local_views(model)
+display(local_models)
 
 # A key aspect in parallel programming is the concept of owned & ghost ids. If we compare 
 # the number of cells of the distributed model to the number of cells of the local model portions, 
@@ -60,6 +62,7 @@ ghost_cell_to_local_cell  = map(ghost_to_local,partition(cell_gids))
 # is a structure that contains: 
 #   - A distributed array of serial (overlapped) `FESpace`s
 #   - The Owned/Ghost layout for the DoFs
+# In this specific example here, and just for clarity, we do not impose any Dirichlet boundary conditions. Since the Poisson problem is defined up to a constant, and therefore is not uniquely defined without any dirichlet boundary conditions, the problem will not be well-posed. However, this is not a problem for the purpose of this tutorial.
 
 feorder = 1
 reffe = ReferenceFE(lagrangian,Float64,feorder)
@@ -78,4 +81,40 @@ local_dofs_to_owner      = map(local_to_owner,partition(dof_gids))
 owned_dofs_to_local_dof  = map(own_to_local,partition(dof_gids))
 ghost_dofs_to_local_dof  = map(ghost_to_local,partition(dof_gids))
 
-# 
+# In order to ensure unicity of the solution, we need to impose Dirichlet boundary conditions. Therefore we will overwrite the `FESpaces` as follows:
+
+g(x) = 0.0
+V = FESpace(model,reffe;dirichlet_tags=["boundary"])
+U = TrialFESpace(V,g)
+
+# We can now define the weak form and integrate as usual: 
+
+degree = 2*order
+Ω = Triangulation(model)
+dΩ = Measure(Ω,degree)
+
+f(x)   = cos(x[1])
+a(u,v) = ∫( ∇(v)⋅∇(u) )*dΩ
+l(v)   = ∫( v*f )*dΩ
+
+op = AffineFEOperator(a,l,V,U)
+uh = solve(op)
+
+# Let's take a moment to have a look at the distributed linear system: As usual, one can access the system matrix and rhs as
+
+A  = get_matrix(op)
+b  = get_vector(op)
+
+# We observe $A$ and $b$ are now of type `PSparseMatrix` and `PVector`, respectively. These represent distributed equivalents of the serial `Matrix` and `Vector` types. Each object holds their local part of the array (both owned and ghost indices) and information on the Owned/Ghost layout for their rows (and columns). 
+#
+# The local sub-matrices and sub-vectors can be accessed as follows:
+#
+
+local_mats = partition(A)
+owned_mats = own_values(A)
+
+local_vectors = partition(b)
+owned_vectors = own_values(b)
+
+# Here, `local_mats` and `local_vectors` contain the sub-matrices and sub-vectors for all the local DoFs (i.e with overlapping), while `owned_mats` and `owned_vectors` contain the sub-matrices and sub-vectors for the owned DoFs only (no overlapping).
+
