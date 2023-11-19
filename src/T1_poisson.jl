@@ -16,7 +16,7 @@
 #
 #  Formally, the problem to solve is: find the scalar field $u$ such that
 #
-# ```math
+# $$
 # \left\lbrace
 # \begin{aligned}
 # -\Delta u = f  \ &\text{in} \ \Omega,\\
@@ -24,16 +24,16 @@
 # \nabla u\cdot n = h \ &\text{on}\  \Gamma_{\rm N},\\
 # \end{aligned}
 # \right.
-# ```
+# $$
 #  being $n$ the outwards unit normal vector to the Neumann boundary $\Gamma_{\rm N}$. 
 # In this tutorial, we will try to recover an analytical solution $u(x,y,z) = cos(x)*sin(y+π)$ and analyze the convergence rates of our numerical approximation.
 #
 #  ## Numerical scheme
 #
 #  To solve this PDE, we use a conventional Galerkin finite element (FE) method with conforming Lagrangian FE spaces (see, e.g., [1] for specific details on this formulation). The weak form associated with this formulation is: find $u\in U$ such that $ a(u,v) = l(v) $ for all $v\in V$, where $U$ and $V$ are the subset of functions in $H^1(\Omega)$ that fulfill the Dirichlet boundary condition $g$ and $0$ respectively. The bilinear and linear forms for this problems are
-# ```math
+# $$
 #   a(u,v) \doteq \int_{\Omega} \nabla v \cdot \nabla u \ {\rm d}\Omega, \quad l(v) \doteq \int_{\Omega} v\ f  \ {\rm  d}\Omega + \int_{\Gamma_{\rm N}} v\ h \ {\rm d}\Gamma_{\rm N}.
-# ```
+# $$
 # The problem is solved numerically by approximating the spaces $U$ and $V$ by their discrete counterparts associated with a FE mesh of the computational domain $\Omega$. As we have anticipated, we consider standard conforming Lagrangian FE spaces for this purpose.
 #
 # The implementation of this numerical scheme in Gridap is done in a user-friendly way thanks to the abstractions provided by the library. As it will be seen below, all the mathematical objects involved in the definition of the discrete weak problem have a correspondent representation in the code.

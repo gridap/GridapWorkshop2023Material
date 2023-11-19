@@ -78,6 +78,7 @@
 #hint= **Hint:** You can also print the model to `.vtk` and visualize the tags with Paraview.
 
 using Gridap
+#hint=# Solution of exercise 1
 #sol=n = 100
 #sol=domain = (0,1,0,1)
 #sol=partition = (n,n)
