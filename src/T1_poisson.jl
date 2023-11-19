@@ -72,7 +72,7 @@ add_tag_from_tags!(labels,"newmann",["tag_23","tag_24","tag_25","tag_26"])
 
 # Note the usage of `add_tag_from_tags!` to construct new boundary tags gathering lower-level tags.
 
-## Approximation spaces
+# ## Approximation spaces
 
 order = 1
 reffe = ReferenceFE(lagrangian,Float64,order)
