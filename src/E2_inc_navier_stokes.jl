@@ -8,7 +8,7 @@
 #
 # Formally, the PDE we want to solve is: find the velocity vector $u$ and the pressure $p$ such that
 #
-# ```math
+# $$
 # \left\lbrace
 # \begin{aligned}
 # -\Delta u + \mathit{Re}\ (u\cdot \nabla)\ u + \nabla p = 0 &\text{ in }\Omega,\\
@@ -16,55 +16,55 @@
 # u = g &\text{ on } \partial\Omega,
 # \end{aligned}
 # \right.
-# ```
+# $$
 #
 # where the computational domain is the unit square $\Omega \doteq (0,1)^d$, $d=2$, and $\mathit{Re}$ is the Reynolds number. In this example, the driving force is the Dirichlet boundary velocity $g$, which is a non-zero horizontal velocity with a value of $g = (1,0)^t$ on the top side of the cavity, namely the boundary $(0,1)\times\{1\}$, and $g=0$ elsewhere on $\partial\Omega$. Since we impose Dirichlet boundary conditions on the entire boundary $\partial\Omega$, the mean value of the pressure is constrained to zero in order have a well posed problem,
 #
-# ```math
+# $$
 # \int_\Omega q \ {\rm d}\Omega = 0.
-# ```
+# $$
 #
 # ## Numerical Scheme
 #
 # In order to approximate this problem we chose a formulation based on inf-sub stable $Q_k/P_{k-1}$ elements with continuous velocities and discontinuous pressures. The interpolation spaces are defined as follows. The velocity interpolation space is
 #
-# ```math
+# $$
 # V \doteq \{ v \in [C^0(\Omega)]^d:\ v|_T\in [Q_k(T)]^d \text{ for all } T\in\mathcal{T} \},
-# ```
+# $$
 # where $T$ denotes an arbitrary cell of the FE mesh $\mathcal{T}$, and $Q_k(T)$ is the local polynomial space in cell $T$ defined as the multi-variate polynomials in $T$ of order less or equal to $k$ in each spatial coordinate. Note that, this is the usual continuous vector-valued Lagrangian FE space of order $k$ defined on a mesh of quadrilaterals or hexahedra.  On the other hand, the space for the pressure is
 #
-# ```math
+# $$
 # \begin{aligned}
 # Q_0 &\doteq \{ q \in Q: \  \int_\Omega q \ {\rm d}\Omega = 0\}, \text{ with}\\
 # Q &\doteq \{ q \in L^2(\Omega):\ q|_T\in P_{k-1}(T) \text{ for all } T\in\mathcal{T}\},
 # \end{aligned}
-# ```
+# $$
 # where $P_{k-1}(T)$ is the polynomial space of multi-variate polynomials in $T$ of degree less or equal to $k-1$. Note that functions in $Q_0$ are strongly constrained to have zero mean value. This is achieved in the code by removing one degree of freedom from the (unconstrained) interpolation space $Q$ and  adding a constant to the computed pressure so that the resulting function has zero mean value.
 #
 # The weak form associated to these interpolation spaces reads: find $(u,p)\in U_g \times Q_0$ such that $[r(u,p)](v,q)=0$ for all $(v,q)\in V_0 \times Q_0$
 # where $U_g$ and $V_0$ are the set of functions in $V$ fulfilling the Dirichlet boundary condition $g$ and $0$  on $\partial\Omega$ respectively. The weak residual $r$ evaluated at a given pair $(u,p)$ is the linear form defined as
 #
-# ```math
+# $$
 # [r(u,p)](v,q) \doteq a((u,p),(v,q))+ [c(u)](v),
-# ```
+# $$
 # with
-# ```math
+# $$
 # \begin{aligned}
 # a((u,p),(v,q)) &\doteq \int_{\Omega} \nabla v \cdot \nabla u \ {\rm d}\Omega - \int_{\Omega} (\nabla\cdot v) \ p \ {\rm d}\Omega + \int_{\Omega} q \ (\nabla \cdot u) \ {\rm d}\Omega,\\
 # [c(u)](v) &\doteq \int_{\Omega} v 	\cdot \left( (u\cdot\nabla)\ u \right)\ {\rm d}\Omega.\\
 # \end{aligned}
-# ```
+# $$
 # Note that the bilinear form $a$ is associated with the linear part of the PDE, whereas $c$ is the contribution to the residual resulting from the convective term.
 #
 # In order to solve this nonlinear weak equation with a Newton-Raphson method, one needs to compute the Jacobian associated with the residual $r$. In this case, the Jacobian $j$ evaluated at a pair $(u,p)$ is the bilinear form defined as
 #
-# ```math
+# $$
 # [j(u,p)]((\delta u, \delta p),(v,q)) \doteq a((\delta u,\delta p),(v,q))  + [{\rm d}c(u)](\delta u,v),
-# ```
+# $$
 # where ${\rm d}c$ results from the linearization of the convective term, namely
-# ```math
+# $$
 # [{\rm d}c(u)](\delta u,v) \doteq \int_{\Omega} v \cdot \left( (u\cdot\nabla)\ \delta u \right) \ {\rm d}\Omega + \int_{\Omega} v \cdot \left( (\delta u\cdot\nabla)\ u \right)  \ {\rm d}\Omega.
-# ```
+# $$
 # The implementation of this numerical scheme is done in Gridap by combining the concepts previously seen for single-field nonlinear PDEs  and linear multi-field problems.
 #
 # ## Creating the discrete model

@@ -6,7 +6,7 @@
 #
 # We consider now as model problem the transient Stokes equations. We will assume the solution of the problem is given by the velocity $u(x,t) = t(x_1,x_2)^T$ and pressure $p(x,t) = t(x_1-x_2)$. Thus, the PDE we want to solve is: find the velocity vector $u$ and the pressure $p$ such that
 #
-# ```math
+# $$
 # \left\lbrace
 # \begin{aligned}
 # \frac{\partial u(t)}{\partial t} - \Delta u(t) + \nabla p &= f(t) & \text{ in }\Omega, \\
@@ -16,7 +16,7 @@
 # p(x,0) &= 0.0 & \text{ in } \Omega,
 # \end{aligned}
 # \right.
-# ```
+# $$
 #
 # where the computational domain is the unit square $\Omega \doteq (0,1)^d$, $d=2$, and $f$ and $g$ are the source terms that can be easily computed from the expressions of $u$ and $p$.
 #
@@ -26,34 +26,34 @@
 #
 # In order to approximate this problem **in space** we chose a formulation based on inf-sub stable $\boldsymbol{Q}_k/Q_{k-1}$ elements with continuous velocities and pressure pairs, the so called Taylor-Hood FEs. The interpolation spaces are defined as follows. The velocity interpolation space is
 #
-# ```math
+# $$
 # V \doteq \{ v \in [C^0(\Omega)]^d:\ v|_T\in [Q_k(T)]^d \text{ for all } T\in\mathcal{T} \},
-# ```
+# $$
 # where $T$ denotes an arbitrary cell of the FE mesh $\mathcal{T}$, and $Q_k(T)$ is the local polynomial space in cell $T$ defined as the multi-variate polynomials in $T$ of order less or equal to $k$ in each spatial coordinate. This is the usual continuous vector-valued Lagrangian FE space of order $k$ defined on a mesh of quadrilaterals or hexahedra. Likewise, the space for the pressure is
 #
-# ```math
+# $$
 # \begin{aligned}
 # Q_0 &\doteq \{ q \in Q: \  \int_\Omega q \ {\rm d}\Omega = 0\}, \text{ with}\\
 # Q &\doteq \{ q \in C^0(\Omega) :\ q|_T\in Q_{k-1}(T) \text{ for all } T\in\mathcal{T}\},
 # \end{aligned}
-# ```
+# $$
 # where functions in $Q_0$ are strongly constrained to have zero mean value.
 #
 # The weak form of the problem reads: find $(u,p) \in U_g(t) \times Q_0$ such that
 #
-# ```math
+# $$
 #   m(t,(u,p),(v,q)) + a(t,(u,p),(v,q)) = b(t,(v,q)) \quad \forall (v,q) \in \ V_0 \times Q_0
-# ```
+# $$
 #
 # where $U_g(t)$ and $V_0$ are the set of functions in $V$ fulfilling the Dirichlet boundary condition $g(t)$ and $0$ on $\partial\Omega$ respectively. Here, $U_g(t)$ is a transient FE space, in the sense that the Dirichlet boundary value of functions in $U_g$ changes in time. The definition of $m(t,(u,p),(v,q))$, $a(t,(u,p),(v,q))$ and $b(t,(v,q))$ is as follows.
 #
-# ```math
+# $$
 # \begin{aligned}
 # m(t,(u,p),(v,q)) &= \int_\Omega \frac{\partial u}{\partial t} v \ d\Omega, \\
 # a(t,(u,p),(v,q)) &= \int_{\Omega} \nabla u \cdot \nabla v \ {\rm d}\Omega - \int_{\Omega} (\nabla\cdot v) \ p \ {\rm d}\Omega + \int_{\Omega} q \ (\nabla \cdot u) \ {\rm d}\Omega, \\
 # b(t,(v,q)) &= \int_\Omega f(t) \cdot v \ d\Omega + \int_\Omega g(t) \ q \ d\Omega
 # \end{aligned}
-# ```
+# $$
 #
 # ## Creating the discrete model
 #
