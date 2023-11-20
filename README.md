@@ -17,7 +17,7 @@ To get the workshop material (available [here](https://github.com/gridap/GridapW
 If your system has an ssh client, you can clone the repository by using
 
 ```bash
-  git clone git@github.com:gridap/GridapWorkshop2023Material.git
+git clone git@github.com:gridap/GridapWorkshop2023Material.git
 ```
 
 Alternative methods to clone the repository can be found [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
@@ -27,13 +27,13 @@ Alternative methods to clone the repository can be found [here](https://docs.git
 Move into the newly cloned repository and start Julia by typing
 
 ```bash
-  julia --project=.
+julia --project=.
 ```
 
 Then, press `]` to enter the package manager and run
 
 ```julia
-  (GridapWorkshop) pkg> instantiate
+(GridapWorkshop) pkg> instantiate
 ```
 
 to install and precompile all the packages needed for the workshop. This may take a while.
@@ -53,14 +53,14 @@ When prompted, enter your password. You should now be logged into Gadi and locat
 In addition to your home directory, you have access to a scratch space, a project-wide shared filesystem that is optimized for parallel access. This is where we will be working during the workshop. Start by creating a personal folder within the project's scratch space and linking it back to your home directory:
 
 ```bash
-  mkdir /scratch/vp91/$USER
-  ln -s /scratch/vp91/$USER $HOME/scratch
+mkdir /scratch/vp91/$USER
+ln -s /scratch/vp91/$USER $HOME/scratch
 ```
 
 Move into your newly created scratch directory and clone the workshop repository as described above. Once the workshop repository is cloned, move into the `/gadi` subdirectory. This directory contains the distributed codes we will be using. Load the Gadi environment by running
 
 ```bash
-  source modules.sh
+source modules.sh
 ```
 
 The script `modules.sh` has several purposes, and needs to be sourced every time you log in. It loads the julia module, the Intel-MPI modules, and sets up some environment variables we will need.
@@ -69,8 +69,8 @@ Next, repeat the steps described in the previous section to setup the Julia envi
 In addition, you will need to setup the environment for parallel. To do so, run
 
 ```bash
-  julia --project=. -e 'using MPIPreferences; MPIPreferences.use_system_binary()'
-  julia --project=. -e 'using Pkg; Pkg.build()'
+julia --project=. -e 'using MPIPreferences; MPIPreferences.use_system_binary()'
+julia --project=. -e 'using Pkg; Pkg.build()'
 ```
 
 The first line sets up `MPI.jl` to work with the Intel-MPI binaries installed on Gadi instead of the julia-specific artifacts. The second line does the same for `GridapPETSc.jl` and `GridapP4est.jl`, which are the Gridap wrappers for PETSc and P4est, respectively.
@@ -86,25 +86,25 @@ The `/gadi/compilation` directory contains files that allow us to do just that u
 First, we will need to install `PackageCompiler` package. It does not need to be installed within the project, so just run
 
 ```bash
-  julia -e 'using Pkg; Pkg.add("PackageCompiler")'
+julia -e 'using Pkg; Pkg.add("PackageCompiler")'
 ```
 
 Next, run the following commands from the `/gadi` directory to create the system image
 
 ```bash
-  julia --project=. compilation/compile.jl
+julia --project=. compilation/compile.jl
 ```
 
 This will take a while (around 5/6 mins), and will create a system image `GadiTutorial.so` in the `/gadi` directory. You can then test this sysimage by running
 
 ```bash
-  julia --project=. -JGadiTutorial.so compilation/warmup.jl
+julia --project=. -JGadiTutorial.so compilation/warmup.jl
 ```
 
 Alternatively, we have also provided a BATCH script that creates the system image on a compute node. This is useful if the architecture of the compute nodes is different from the login nodes (for instance, when running on GPU nodes). It is also good practice to not run heavy computations on the login nodes. To run compile remotely, run
 
 ```bash
-  qsub compilation/compile.sh
+qsub compilation/compile.sh
 ```
 
 You can see the status of the job by running `qstat`.
