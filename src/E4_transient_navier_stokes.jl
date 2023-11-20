@@ -11,7 +11,7 @@
 # $$
 # \left\lbrace
 # \begin{aligned}
-# -\Delta u + \mathit{Re}\ (u\cdot \nabla)\ u + \nabla p = 0 &\text{ in }\Omega,\\
+# \frac{\partial u(t)}{\partial t} - \Delta u + \mathit{Re}\ (u\cdot \nabla)\ u + \nabla p = 0 &\text{ in }\Omega,\\
 # \nabla\cdot u = 0 &\text{ in } \Omega,\\
 # u = g &\text{ on } \partial\Omega,
 # \end{aligned}
@@ -79,13 +79,13 @@
 
 using Gridap
 #hint=# Solution of exercise 1
-#sol=n = 100
-#sol=domain = (0,1,0,1)
-#sol=partition = (n,n)
-#sol=model = CartesianDiscreteModel(domain,partition)
-#sol=labels = get_face_labeling(model)
-#sol=add_tag_from_tags!(labels,"diri1",[6,])
-#sol=add_tag_from_tags!(labels,"diri0",[1,2,3,4,5,7,8])
+n = 100
+domain = (0,1,0,1)
+partition = (n,n)
+model = CartesianDiscreteModel(domain,partition)
+labels = get_face_labeling(model)
+add_tag_from_tags!(labels,"diri1",[6,])
+add_tag_from_tags!(labels,"diri0",[1,2,3,4,5,7,8])
 
 # ## Setting up multifield FE spaces
 #
@@ -96,10 +96,10 @@ using Gridap
 # _Create a standard vector-valued continuous Lagrangian test FE space of second order that is constrained at the `diri0` and `diri1` regions._
 
 #hint=# Solution of exercise 2
-#sol=D = 2
-#sol=order = 2
-#sol=reffeᵤ = ReferenceFE(lagrangian,VectorValue{D,Float64},order)
-#sol=V = TestFESpace(model,reffeᵤ,conformity=:H1,dirichlet_tags=["diri0","diri1"])
+D = 2
+order = 2
+reffeᵤ = ReferenceFE(lagrangian,VectorValue{D,Float64},order)
+V = TestFESpace(model,reffeᵤ,conformity=:H1,dirichlet_tags=["diri0","diri1"])
 
 # For the pressure, we instantiate a linear discontinuous FE space of functions strongly constrained to have zero mean value.
 
@@ -115,15 +115,18 @@ Q = TestFESpace(model,reffeₚ,conformity=:L2,constraint=:zeromean)
 #hint= **Hint:** Remember to create the functions prescribing the Dirichlet values at the `diri0` and `diri1` regions.
 
 #hint=# Solution of exercise 3
-#sol=uD0 = VectorValue(0,0)
-#sol=uD1 = VectorValue(1,0)
-#sol=U = TrialFESpace(V,[uD0,uD1])
-#sol=P = TrialFESpace(Q)
+uD0(x,t::Real) = VectorValue(0,0)
+uD1(x,t::Real) = VectorValue(1,0)
+uD0(t::Real) = x -> uD0(x,t)
+uD1(t::Real) = x -> uD1(x,t)
+
+U = TransientTrialFESpace(V,[uD0,uD1])
+P = TrialFESpace(Q)
 
 # With all these ingredients we create the FE spaces representing the Cartesian product of the velocity and pressure FE spaces, which is none other than the multifield FE space where we are seeking the solution the problem.
 
 Y = MultiFieldFESpace([V, Q])
-X = MultiFieldFESpace([U, P])
+X = TransientMultiFieldFESpace([U, P])
 
 # ## Triangulation and integration quadrature
 #
@@ -143,6 +146,7 @@ dconv(du,∇du,u,∇u) = conv(u,∇du)+conv(du,∇u)
 
 # The bilinear form reads
 
+m((ut,p),(v,q)) = ∫( ut⋅v )dΩ
 a((u,p),(v,q)) = ∫( ∇(v)⊙∇(u) - (∇⋅v)*p + q*(∇⋅u) )dΩ
 
 # Note that, since we are using a Cartesian product FE space, it's elements are tuples. Here we use `(u,p)` and `(v,q)` to denote the trial and test functions.
@@ -158,12 +162,11 @@ dc(u,du,v) = ∫( v⊙(dconv∘(du,∇(du),u,∇(u))) )dΩ
 #
 # Finally, the Navier-Stokes weak form residual and Jacobian can be defined as
 
-res((u,p),(v,q)) = a((u,p),(v,q)) + c(u,v)
-jac((u,p),(du,dp),(v,q)) = a((du,dp),(v,q)) + dc(u,du,v)
+res(t,(u,p),(v,q)) = m((u,p),(v,q)) + a((u,p),(v,q)) + c(u,v)
+jac(t,(u,p),(du,dp),(v,q)) = m((du,dp),(v,q)) + a((du,dp),(v,q)) + dc(u,du,v)
+jac_t(t,(u,p),(dut,dpt),(v,q)) = m((dut,dpt),(v,q))
 
-# With the functions `res`, and `jac` representing the weak residual and the Jacobian, we build the nonlinear FE problem:
-
-op = FEOperator(res,jac,X,Y)
+op = TransientFEOperator(res,jac,jac_t,X,Y)
 
 # Here, we have constructed an instance of `FEOperator`, which is the type that represents a general nonlinear FE problem in Gridap. The constructor takes the functions representing the weak residual and Jacobian, and the test and trial spaces. If only the function for the residual is provided, the Jacobian is computed internally with automatic differentiation.
 
@@ -174,27 +177,25 @@ op = FEOperator(res,jac,X,Y)
 # We construct an instance of `FESolver` as follows:
 
 using LineSearches: BackTracking
-nls = NLSolver(
-  show_trace=true, method=:newton, linesearch=BackTracking())
-solver = FESolver(nls)
+nls = NLSolver(show_trace=true, method=:newton, linesearch=BackTracking())
 
-# Note that the `NLSolver` function used above internally calls the `nlsolve` function of the [NLsolve](https://github.com/JuliaNLSolvers/NLsolve.jl) package with the provided key-word arguments. Thus, one can use any of the nonlinear methods available via the function `nlsolve` to solve the nonlinear FE problem. Here, we have selected a Newton-Raphson method with a back-tracking line-search from the [LineSearches](https://github.com/JuliaNLSolvers/LineSearches.jl) package.
-#
-# We solve the problem without providing an initial guess. This means a default one equal to zero will be generated internally.
+Δt = 0.05
+θ = 0.5
+ode_solver = ThetaMethod(linear_solver,Δt,θ)
 
-uh, ph = solve(solver,op)
+u₀ = interpolate_everywhere(0.0,U(0.0))
+t₀ = 0.0
+T = 10.0
+xₕₜ = solve(ode_solver,op,u₀,t₀,T)
 
 # Finally, we write the results for visualization (see next figure).
 
-using DrWatson
-out_file = datadir("ins")
-writevtk(Ωₕ,out_file,cellfields=["uh"=>uh,"ph"=>ph])
-
-#
-# <img src="../figures/stokes/ins_solution.png" width="240">
-#
-# ## References
-#
-# This tutorial has been adapted from the [Gridap Tutorial 8: Incompressible Navier-Stokes](https://gridap.github.io/Tutorials/dev/pages/t008_inc_navier_stokes/)
-#
-# **Tutorial done!**
+dir = datadir("poisson_transient_solution")
+!isdir(dir) && mkdir(dir)
+createpvd(dir) do pvd
+  for (xₕ,t) in xₕₜ
+    uₕ,pₕ = xₕ
+    file = dir*"/solution_$t"*".vtu"
+    pvd[t] = createvtk(Ω,file,cellfields=["u"=>uₕ,"p"=>pₕ])
+  end
+end
