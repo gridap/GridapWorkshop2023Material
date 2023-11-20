@@ -1,8 +1,15 @@
 # GridapWorkshop2023Material
 
+The practical part of the workshop will consist of instructors' guided hands-on tutorials and exercises.
+This will be carried out  either
+on the attendees laptops (mostly first day) or the [Gadi supercomputer](https://opus.nci.org.au/display/Help/Gadi+User+Guide) at 
+NCI (mostly second day). You will find below the instructions to set up the software environment required in both cases.
+For the Gadi supercomputer, you will get an invitation from the instructors to create an account prior to the 
+workshop.
+
 ## Required software
 
-Before being able to work on the workshop material, you will need to install the following software:
+Before being able to work on the workshop material, you will need to install the following software on your laptop:
 
 - Install [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), the version control system we will use. **For Windows users, we strongly recommend installing [git for Windows](https://gitforwindows.org/). This will also install a bash shell, which will allow you to follow the rest of the installation instructions verbatim.**
 - Download and install Julia based on the platform you are using from the [Julia](https://julialang.org/downloads/platform/) home page.
@@ -14,7 +21,7 @@ Before being able to work on the workshop material, you will need to install the
 
 ## Getting the workshop material
 
-To get the workshop material (available [here](https://github.com/gridap/GridapWorkshop2023Material)) you can either download it as a zip file or clone the repository using git. We strongly recommend the latter as you will be able to automatically pull the most up-to-date changes as per required.
+The workshop material is available as a git repository [here](https://github.com/gridap/GridapWorkshop2023Material). You can either download it as a zip file or clone the repository using git. We strongly recommend the latter as you will be able to automatically pull the most up-to-date changes as per required.
 
 If your system has an ssh client, you can clone the repository using the following command
 
@@ -52,7 +59,7 @@ More information on Julia Environments can be found [here](https://pkgdocs.julia
 
 ## Setting up the environment on Gadi
 
-First, we will need to log into Gadi. You will have received an email with your username and password (which you should change). If your username is `aaa777`, you can connect to Gadi by typing
+First, we will need to log into Gadi. You will receive an email at some point with an invitation to create an account. At the end of the process, you will get a username and password (which you should change). If your username is `aaa777`, you can connect to Gadi by typing
 
 ```bash
 ssh aaa777@gadi.nci.org.au
