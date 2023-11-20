@@ -59,16 +59,16 @@ model  = CartesianDiscreteModel(domain,nC)
 
 # By construction, a `CartesianDiscreteModel` associates with labels every vertex, edge and facet of the model to its parent corner, edge, facet or interior of the grid's bounding box. Label numbering follows the increasing lexicographic order.
 #
-# We use this default order to set up the BCs as follows. For convenience, we create two new boundary tags, namely `"dirichlet"` and `"newmann"`.
+# We use this default order to set up the BCs as follows. For convenience, we create two new boundary tags, namely `"dirichlet"` and `"neumann"`.
 #
 # Gridap provides a convenient way to create new object identifiers (referred to as "tags") from existing ones. First, we need to extract from the model, the object that holds the information about the boundary identifiers (referred to as `FaceLabeling`):
 
 labels = get_face_labeling(model)
 
-# Then, we can add new identifiers (aka "tags") to it. In the next line, we create new tags called `"dirichlet"` and `"newmann"` combining the default labels of the model to represent $\Gamma_D$ and $\Gamma_N$ respectively.
+# Then, we can add new identifiers (aka "tags") to it. In the next line, we create new tags called `"dirichlet"` and `"neumann"` combining the default labels of the model to represent $\Gamma_D$ and $\Gamma_N$ respectively.
 
 add_tag_from_tags!(labels,"dirichlet",["tag_21","tag_22"])
-add_tag_from_tags!(labels,"newmann",["tag_23","tag_24","tag_25","tag_26"])
+add_tag_from_tags!(labels,"neumann",["tag_23","tag_24","tag_25","tag_26"])
 
 # Note the usage of `add_tag_from_tags!` to construct new boundary tags gathering lower-level tags.
 
@@ -102,12 +102,12 @@ dΩ = Measure(Ω,degree)
 #
 # On the other hand, we need a special type of triangulation, represented by the type `BoundaryTriangulation`, to integrate on the boundary. Essentially, a `BoundaryTriangulation` is a particular type of `Triangulation` that is aware of which cells in the model are touched by faces on the boundary. We build an instance of this type from the discrete model and the names used to identify the Neumann boundary as follows:
 
-Γ   = BoundaryTriangulation(model,tags="newmann")
+Γ   = BoundaryTriangulation(model,tags="neumann")
 dΓ  = Measure(Γ,degree)
 
 # In addition, we have created a quadrature of degree 2 on top of the cells in the triangulation for the Neumann boundary.
 #
-# In order to impose our Newmann boundary conditions, we will need to compute the normal vector to the boundary. This is done with the function `get_normal_vector`:
+# In order to impose our neumann boundary conditions, we will need to compute the normal vector to the boundary. This is done with the function `get_normal_vector`:
 
 n_Γ = get_normal_vector(Γ)
 
@@ -171,7 +171,7 @@ function driver(n,order)
   model  = CartesianDiscreteModel(domain,nC)
   labels = get_face_labeling(model)
   add_tag_from_tags!(labels,"dirichlet",["tag_21","tag_22"])
-  add_tag_from_tags!(labels,"newmann",["tag_23","tag_24","tag_25","tag_26"])
+  add_tag_from_tags!(labels,"neumann",["tag_23","tag_24","tag_25","tag_26"])
 
   reffe = ReferenceFE(lagrangian,Float64,order)
   V = TestFESpace(model,reffe;conformity=:H1,dirichlet_tags="dirichlet")
@@ -180,7 +180,7 @@ function driver(n,order)
   degree = order*2+1
   Ω   = Triangulation(model)
   dΩ  = Measure(Ω,degree)
-  Γ   = BoundaryTriangulation(model,tags="newmann")
+  Γ   = BoundaryTriangulation(model,tags="neumann")
   dΓ  = Measure(Γ,degree)
   n_Γ = get_normal_vector(Γ)
 

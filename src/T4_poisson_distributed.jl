@@ -132,7 +132,7 @@ owned_rows_to_local_row  = map(own_to_local,partition(rows))
 ghost_rows_to_local_row  = map(ghost_to_local,partition(rows))
 
 # First, the owned DoFs are not necessarily the first ones in the global ordering. However, owned rows are always the first ones in the global ordering. This reordering is done to comply with the standards set by other distributed linear algebra libraries, such as PETSc.
-# Second, the the number of ghosts in the dof layout is higher than the number of ghosts in the row layout. This is because the row layout only contains the ghosts indices that are needed to compute the local matrix-vector product. 
+# Second, the number of ghosts in the dof layout is higher than the number of ghosts in the row layout. This is because the row layout only contains the ghosts indices that are needed to compute the local matrix-vector product. 
 # What we take away from this is that we cannot use a `PVector` of DoFs to solve the linear system and viceversa (which is what we generally do in serial). Moreover, the ghost layout can also be different for the rows and columns. If we ever do this, we will get an error message:
 
 x = get_free_dof_values(uh) # DoF layout
