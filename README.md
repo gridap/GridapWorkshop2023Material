@@ -14,7 +14,7 @@ Before being able to work on the workshop material, you will need to install the
 
 ## Getting the workshop material
 
-To get the workshop material (available [here](https://github.com/gridap/GridapWorkshop2023Material)) you can either download it as a zip file or clone the repository using git. We strongly recommend the latter as you will be able to automatically pull the most up-to-date changes.
+To get the workshop material (available [here](https://github.com/gridap/GridapWorkshop2023Material)) you can either download it as a zip file or clone the repository using git. We strongly recommend the latter as you will be able to automatically pull the most up-to-date changes as per required.
 
 If your system has an ssh client, you can clone the repository using the following command
 
