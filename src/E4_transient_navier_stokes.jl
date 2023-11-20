@@ -78,14 +78,10 @@
 #hint= **Hint:** You can also print the model to `.vtk` and visualize the tags with Paraview.
 
 using Gridap
-#hint=# Solution of exercise 1
-n = 100
-domain = (0,1,0,1)
-partition = (n,n)
-model = CartesianDiscreteModel(domain,partition)
-labels = get_face_labeling(model)
-add_tag_from_tags!(labels,"diri1",[6,])
-add_tag_from_tags!(labels,"diri0",[1,2,3,4,5,7,8])
+using GridapGmsh
+
+msh_file = projectdir("meshes/perforated_plate.json")
+model = DiscreteModelFromFile(msh_file)
 
 # ## Setting up multifield FE spaces
 #
@@ -99,7 +95,7 @@ add_tag_from_tags!(labels,"diri0",[1,2,3,4,5,7,8])
 D = 2
 order = 2
 reffeᵤ = ReferenceFE(lagrangian,VectorValue{D,Float64},order)
-V = TestFESpace(model,reffeᵤ,conformity=:H1,dirichlet_tags=["diri0","diri1"])
+V = TestFESpace(model,reffeᵤ,conformity=:H1,dirichlet_tags=["inlet","noSlip","hole"])
 
 # For the pressure, we instantiate a linear discontinuous FE space of functions strongly constrained to have zero mean value.
 
@@ -115,12 +111,15 @@ Q = TestFESpace(model,reffeₚ,conformity=:L2,constraint=:zeromean)
 #hint= **Hint:** Remember to create the functions prescribing the Dirichlet values at the `diri0` and `diri1` regions.
 
 #hint=# Solution of exercise 3
-uD0(x,t::Real) = VectorValue(0,0)
-uD1(x,t::Real) = VectorValue(1,0)
-uD0(t::Real) = x -> uD0(x,t)
-uD1(t::Real) = x -> uD1(x,t)
 
-U = TransientTrialFESpace(V,[uD0,uD1])
+const Uₘ = 1.0
+const H  = 0.41
+u_in(x,t::Real) = VectorValue( 1.5 * Uₘ * x[2] * ( H - x[2] ) / ( (H/2)^2 ), 0.0 )
+u_0(x,t::Real)  = VectorValue(0,0)
+u_in(t::Real)   = x -> u_in(x,t)
+u_0(t::Real)    = x -> u_0(x,t)
+
+U = TransientTrialFESpace(V,[u_in,u_0,u_0])
 P = TrialFESpace(Q)
 
 # With all these ingredients we create the FE spaces representing the Cartesian product of the velocity and pressure FE spaces, which is none other than the multifield FE space where we are seeking the solution the problem.
@@ -133,18 +132,24 @@ X = TransientMultiFieldFESpace([U, P])
 # From the discrete model we can define the triangulation and integration measure
 
 degree = order
-Ωₕ = Triangulation(model)
-dΩ = Measure(Ωₕ,degree)
+Ω  = Triangulation(model)
+dΩ = Measure(Ω,degree)
+
+Γ_out = BoundaryTriangulation(model,tags="outlet")
+n_Γout = get_normal_vector(Γ_out)
+dΓ_out = Measure(Γ_out,degree)
 
 # ## Nonlinear weak form and FE operator
 #
 # The different terms of the nonlinear weak form for this example are defined using the notation for multi-field problems.
 
-const Re = 10.0
+const Re = 100.0
 conv(u,∇u) = Re*(∇u')⋅u
 dconv(du,∇du,u,∇u) = conv(u,∇du)+conv(du,∇u)
 
 # The bilinear form reads
+hN(x) = VectorValue( 0.0, 0.0 )
+l_out(v) = ∫( v⋅hN )dΓ_out
 
 m((ut,p),(v,q)) = ∫( ut⋅v )dΩ
 a((u,p),(v,q)) = ∫( ∇(v)⊙∇(u) - (∇⋅v)*p + q*(∇⋅u) )dΩ
@@ -162,11 +167,11 @@ dc(u,du,v) = ∫( v⊙(dconv∘(du,∇(du),u,∇(u))) )dΩ
 #
 # Finally, the Navier-Stokes weak form residual and Jacobian can be defined as
 
-res(t,(u,p),(v,q)) = m((u,p),(v,q)) + a((u,p),(v,q)) + c(u,v)
+res(t,(u,p),(v,q)) = m((u,p),(v,q)) + a((u,p),(v,q)) + c(u,v) - l_out(v)
 jac(t,(u,p),(du,dp),(v,q)) = m((du,dp),(v,q)) + a((du,dp),(v,q)) + dc(u,du,v)
 jac_t(t,(u,p),(dut,dpt),(v,q)) = m((dut,dpt),(v,q))
 
-op = TransientFEOperator(res,jac,jac_t,X,Y)
+op = TransientFEOperator(res,X,Y)
 
 # Here, we have constructed an instance of `FEOperator`, which is the type that represents a general nonlinear FE problem in Gridap. The constructor takes the functions representing the weak residual and Jacobian, and the test and trial spaces. If only the function for the residual is provided, the Jacobian is computed internally with automatic differentiation.
 
@@ -181,16 +186,16 @@ nls = NLSolver(show_trace=true, method=:newton, linesearch=BackTracking())
 
 Δt = 0.05
 θ = 0.5
-ode_solver = ThetaMethod(linear_solver,Δt,θ)
+ode_solver = ThetaMethod(LUSolver(),Δt,θ)
 
-u₀ = interpolate_everywhere(0.0,U(0.0))
+u₀ = zero(X(0.0))
 t₀ = 0.0
 T = 10.0
 xₕₜ = solve(ode_solver,op,u₀,t₀,T)
 
 # Finally, we write the results for visualization (see next figure).
 
-dir = datadir("poisson_transient_solution")
+dir = datadir("ins_stokes_transient")
 !isdir(dir) && mkdir(dir)
 createpvd(dir) do pvd
   for (xₕ,t) in xₕₜ
