@@ -35,6 +35,14 @@ git clone git@github.com:gridap/GridapWorkshop2023Material.git
 
 from the terminal. Alternative methods to clone the repository can be found [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 
+Once you have cloned the repository, you can pull the most up-to-date changes with the following command executed from the root directory of the repository:
+
+```bash
+git pull origin
+```
+
+You may expect changes in the tutorials and exercises till the very last minute. These instructions are mostly definitive, though.
+
 ## Setting up the environment on your local computer from the terminal
 
 Move into the newly cloned repository and start Julia from the terminal by typing
