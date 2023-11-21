@@ -6,6 +6,7 @@
 #   - `Gridap`, which provides the local FE framework
 #   - `PartitionedArrays`, which provides a generic library for MPI-distributed linear algebra
 #   - `GridapDistributed`, which provides the distributed layer on top of `Gridap`
+
 using Gridap
 using GridapDistributed
 using PartitionedArrays
@@ -95,8 +96,10 @@ op = AffineFEOperator(a,l,V,U)
 uh = solve(op)
 
 # Note that by default `solve` will use the Julia LU direct solver. In parallel, we provide a toy implementation that gathers the whole matrix into a single processor and solves the linear system there. This is not scalable, and should only be used for debugging/testing purposes.
+#
 # The design of scalable solvers is a very complex issue. Direct factorization solvers such as MUMPS or PARDISO can scale to a few hundred processors, but iterative preconditioned solvers are the only viable option for larger problems. 
-# As we will see in the next tutorial, Gridap provides interfaces to some of the most popular distributed linear algebra libraries, such as PETSc, through satellite packages. We also in the process of providing Julia-native iterative solvers. 
+#
+# As we will see in the next tutorial, Gridap provides interfaces to some of the most popular distributed linear algebra libraries, such as PETSc, through satellite packages. We are also in the process of providing Julia-native iterative solvers. 
 
 # ## Distributed linear algebra
 #
@@ -132,7 +135,9 @@ owned_rows_to_local_row  = map(own_to_local,partition(rows))
 ghost_rows_to_local_row  = map(ghost_to_local,partition(rows))
 
 # First, the owned DoFs are not necessarily the first ones in the global ordering. However, owned rows are always the first ones in the global ordering. This reordering is done to comply with the standards set by other distributed linear algebra libraries, such as PETSc.
+#
 # Second, the number of ghosts in the dof layout is higher than the number of ghosts in the row layout. This is because the row layout only contains the ghosts indices that are needed to compute the local matrix-vector product. 
+#
 # What we take away from this is that we cannot use a `PVector` of DoFs to solve the linear system and viceversa (which is what we generally do in serial). Moreover, the ghost layout can also be different for the rows and columns. If we ever do this, we will get an error message:
 
 x = get_free_dof_values(uh) # DoF layout
