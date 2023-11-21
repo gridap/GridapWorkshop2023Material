@@ -1,3 +1,9 @@
++++
+title = "Software installation instructions"
+hascode = false
++++
+
+
 # GridapWorkshop2023Material
 
 The practical part of the workshop will consist of instructors' guided hands-on tutorials and exercises.
