@@ -1,8 +1,5 @@
 
-#cmd = `
-#  mpiexec -n 4 julia --project=. -O3 -e'using GadiTutorial; main_poisson((2,2))'
-#`
-#run(cmd)
-
 using GadiTutorial
 main_poisson(;nprocs=(1,1))
+main_ins(;nprocs=1,mesh="perforated_plate_tiny.msh",T=0.02)
+main_ins(;nprocs=1,mesh="perforated_slab_tiny.msh",T=0.02)

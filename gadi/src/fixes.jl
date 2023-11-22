@@ -7,32 +7,6 @@ Gridap.Arrays.evaluate!(cache,k::Operation,a::GridapDistributed.DistributedCellF
 Base.:(∘)(f::Function,g::Tuple{GridapDistributed.TransientDistributedCellField,GridapDistributed.DistributedCellField}) = Operation(f)(g[1],g[2])
 Base.:(∘)(f::Function,g::Tuple{GridapDistributed.DistributedCellField,GridapDistributed.TransientDistributedCellField}) = Operation(f)(g[1],g[2])
 
-# GridapDistributed visualization fixes 
-
-function GridapDistributed._prepare_fdata(trians,a)
-  _fdata(v,trians) = local_views(v)
-  _fdata(v::AbstractArray,trians) = v
-  #_fdata(v,trians) = map(ti->v,trians)
-  if length(a) == 0
-    return map(trians) do t
-      Dict()
-    end
-  end
-  ks = []
-  vs = []
-  for (k,v) in a
-    push!(ks,k)
-    push!(vs,_fdata(v,trians))
-  end
-  map(vs...) do vs...
-    b = []
-    for i in 1:length(vs)
-      push!(b,ks[i]=>vs[i])
-    end
-    b
-  end
-end
-
 # GridapPETSc fixes
 
 function Gridap.Algebra.solve!(x::T,

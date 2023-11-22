@@ -5,15 +5,6 @@ module load intel-compiler-llvm/2023.2.0
 module load intel-mpi/2021.10.0
 module load intel-mkl/2023.2.0
 
-# For some reason are not set to mpi
-export CONFIGURE_FLAGS='--with-cc=mpiicc --with-cxx=mpiicpc --with-fc=mpiifx --with-f77=mpiifort --with-f90=mpiifort'
-export CC=mpiicc
-export CXX=mpiicpc
-export CP=mpiicpc
-export F77=mpiifort
-export F90=mpiifort
-export FC=mpiifx
-
 export MPI_VERSION="intel-$INTEL_MPI_VERSION"
 export JULIA_MPI_PATH=$INTEL_MPI_ROOT
 

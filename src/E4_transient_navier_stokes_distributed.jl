@@ -16,10 +16,9 @@ end
 msh_file = projectdir("meshes/perforated_plate.msh")
 model = GmshDiscreteModel(ranks,msh_file)
 
-D = 2
-k = 2
 
-reffeᵤ = ReferenceFE(lagrangian,VectorValue{D,Float64},k)
+k = 2
+reffeᵤ = ReferenceFE(lagrangian,VectorValue{2,Float64},k)
 reffeₚ = ReferenceFE(lagrangian,Float64,k-1)
 
 V = TestFESpace(model,reffeᵤ,conformity=:H1,dirichlet_tags=["inlet","walls","cylinder"])
@@ -42,7 +41,7 @@ P = TrialFESpace(Q)
 Y = MultiFieldFESpace([V, Q])
 X = TransientMultiFieldFESpace([U, P])
 
-degree = k
+degree = 2*k
 Ω  = Triangulation(model)
 dΩ = Measure(Ω,degree)
 

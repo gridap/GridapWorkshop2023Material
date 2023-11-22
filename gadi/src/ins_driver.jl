@@ -1,18 +1,34 @@
 
-function main_ins(;nprocs,               # Number of processors
-                   options=OPTIONS_MUMPS # PETSc solver options
+function main_ins(;nprocs,                      # Number of processors
+                   mesh="perforated_plate.msh", # Mesh file
+                   options=OPTIONS_MUMPS,       # PETSc solver options
+                   T=2.0                        # Final time
                   )
   nls_options = "-snes_monitor -ksp_error_if_not_converged true "
   options = string(nls_options,options)
   with_mpi() do distribute
-    main_ins(distribute,nprocs,options)
+    main_ins(distribute,nprocs,mesh,options,T)
   end
 end
 
-function main_ins(distribute,nprocs,options)
+function ξ(t::Real,Tth::Real)
+  (t <= Tth) ? sin(π*t/(2*Tth)) : 1.0
+end
+
+function inflow(x::VectorValue{2},t::Real,H,Tth)
+  Uₘ = 1.5
+  VectorValue(4*Uₘ*x[2]*(H-x[2])/(H^2) * ξ(t,Tth), 0.0 )
+end
+
+function inflow(x::VectorValue{3},t::Real,H,Tth)
+  Uₘ = 2.25
+  VectorValue(16*Uₘ*x[2]*x[3]*(H-x[2])*(H-x[3])/(H^4) * ξ(t,Tth), 0.0, 0.0)
+end
+
+function main_ins(distribute,nprocs,mesh,options,T)
   ranks = distribute(LinearIndices((prod(nprocs),)))
 
-  msh_file = projectdir("meshes/perforated_plate.msh")
+  msh_file = projectdir("meshes/$mesh")
   model = GmshDiscreteModel(ranks,msh_file)
   D = num_cell_dims(model)
 
@@ -23,13 +39,10 @@ function main_ins(distribute,nprocs,options)
   V = TestFESpace(model,reffeᵤ,conformity=:H1,dirichlet_tags=["inlet","walls","cylinder"])
   Q = TestFESpace(model,reffeₚ,conformity=:C0)
 
-  Tth = 2
-  Uₘ = 1.5
   H  = 0.41
-  ξ(t) = (t <= Tth) ? sin(π*t/(2*Tth)) : 1.0
-  u_in(x,t::Real) = VectorValue( 4 * Uₘ * x[2] * (H-x[2]) / (H^2) * ξ(t), 0.0 )
-  u_w(x,t::Real)  = VectorValue(0.0,0.0)
-  u_c(x,t::Real)  = VectorValue(0.0,0.0)
+  u_in(x,t::Real) = inflow(x,t,H,T)
+  u_w(x,t::Real)  = zero(VectorValue{D,Float64})
+  u_c(x,t::Real)  = zero(VectorValue{D,Float64})
   u_in(t::Real)   = x -> u_in(x,t)
   u_w(t::Real)    = x -> u_w(x,t)
   u_c(t::Real)    = x -> u_c(x,t)
@@ -40,7 +53,7 @@ function main_ins(distribute,nprocs,options)
   Y = MultiFieldFESpace([V, Q])
   X = TransientMultiFieldFESpace([U, P])
 
-  degree = k
+  degree = 2*k
   Ω  = Triangulation(model)
   dΩ = Measure(Ω,degree)
 
@@ -65,10 +78,9 @@ function main_ins(distribute,nprocs,options)
     θ  = 0.5
     ode_solver = ThetaMethod(nls,Δt,θ)
 
-    u₀ = interpolate_everywhere([VectorValue(0.0,0.0),0.0],X(0.0))
+    x₀ = interpolate_everywhere([zero(VectorValue{D,Float64}),0.0],X(0.0))
     t₀ = 0.0
-    T  = Tth
-    xₕₜ = solve(ode_solver,op,u₀,t₀,T)
+    xₕₜ = solve(ode_solver,op,x₀,t₀,T)
 
     out_dir = datadir("ins")
     (i_am_main(ranks) && !isdir(out_dir)) && mkdir(out_dir)
