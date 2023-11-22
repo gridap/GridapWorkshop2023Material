@@ -112,6 +112,10 @@ julia --project=. -e 'using Pkg; Pkg.build()'
 
 The first line sets up `MPI.jl` to work with the Intel-MPI binaries installed on Gadi instead of the Julia-specific artifacts. The second line does the same for `GridapPETSc.jl` and `GridapP4est.jl`, which are the Gridap wrappers for PETSc and P4est, respectively.
 
+## Accessing to Gadi using ARE (graphical interface on the web browser)
+
+For those users which are more comfortable with graphical interfaces, the instructions in the previous section can also be followed on a terminal opened in your web browser using the so-called [ARE-Australian Research Environment](https://opus.nci.org.au/display/Help/ARE+User+Guide). ARE will also allow you to open a Virtual Desktop on the web browser, and run Paraview there, so that you can visualize the results of your simulations without having to download the data files to your local computer (which might be heavy for large scale problems). You can find ARE usage instructions [here](https://opus.nci.org.au/display/Help/ARE+User+Guide).
+
 ## Creating a system image
 
 Unfortunately, there is distributed version of the Julia REPL. This means running MPI codes interactively is not possible. Moreover, Julia notoriously suffers from long TTFX (Time To First eXecution) times due to Just-In-Time compilation. Although this problem is being the focus of the latest releases, it can still be tedious to work within an edit-run-debug cycle.
