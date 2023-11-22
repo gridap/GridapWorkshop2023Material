@@ -13,9 +13,8 @@ ranks = with_debug() do distribute
   distribute(LinearIndices((np,)))
 end
 
-msh_file = projectdir("meshes/perforated_plate.msh")
+msh_file = projectdir("meshes/perforated_plate_tiny.msh")
 model = GmshDiscreteModel(ranks,msh_file)
-
 
 k = 2
 reffeᵤ = ReferenceFE(lagrangian,VectorValue{2,Float64},k)
@@ -63,23 +62,21 @@ jac(t,(u,p),(du,dp),(v,q)) = a((du,dp),(v,q)) + dc(u,du,v)
 jac_t(t,(u,p),(dut,dpt),(v,q)) = m((dut,dpt),(v,q))
 op = TransientFEOperator(res,jac,jac_t,X,Y)
 
-
 nls = Gridap.Algebra.NewtonRaphsonSolver(LUSolver(),1.e-6,10)
-
-Δt = 0.01
-θ  = 0.5
+Δt  = 0.01
+θ   = 0.5
 ode_solver = ThetaMethod(nls,Δt,θ)
 
-u₀ = interpolate_everywhere([VectorValue(0.0,0.0),0.0],X(0.0))
+x₀ = interpolate_everywhere([VectorValue(0.0,0.0),0.0],X(0.0))
 t₀ = 0.0
 T  = Tth
-xₕₜ = solve(ode_solver,op,u₀,t₀,T)
+xₕₜ = solve(ode_solver,op,x₀,t₀,T)
 
-dir = datadir("ins_transient_distributed")
+dir = datadir("ins_distributed")
 !isdir(dir) && mkdir(dir)
 for (xₕ,t) in xₕₜ
   println(" > Computing solution at time $t")
   uₕ,pₕ = xₕ
   file = dir*"/solution_$t"*".vtu"
-  createvtk(Ω,file,cellfields=["u"=>uₕ,"p"=>pₕ])
+  writevtk(Ω,file,cellfields=["u"=>uₕ,"p"=>pₕ])
 end

@@ -75,14 +75,14 @@
 #
 # ## Geometry
 # 
-# We start by importing the packages and loading the provided mesh: 
+# We start by importing the packages and loading the provided mesh in the file `perforated_plate_tiny.msh`: 
 #
 
-using Gridap
+using Gridap, GridapGmsh
 using DrWatson
 
-msh_file = projectdir("meshes/perforated_plate.json")
-model = DiscreteModelFromFile(msh_file)
+msh_file = projectdir("meshes/perforated_plate_tiny.msh")
+model = GmshDiscreteModel(msh_file)
 
 # ### Exercise 1
 #

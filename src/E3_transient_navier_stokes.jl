@@ -81,13 +81,13 @@
 # 
 # ### Exercise 1
 # 
-# _By using the code in the previous exercise, load the mesh from the file `perforated_plate.json`._ 
+# _By using the code in the previous exercise, load the mesh from the file `perforated_plate_tiny.msh`. If your computer is good enough, or if you are working on Gadi, you might want to try the refined model in file `perforated_plate.msh`._ 
 
-using Gridap
+using Gridap, GridapGmsh
 using DrWatson
 
-msh_file = projectdir("meshes/perforated_plate.json")
-model = DiscreteModelFromFile(msh_file)
+msh_file = projectdir("meshes/perforated_plate_tiny.msh")
+model = GmshDiscreteModel(msh_file)
 
 # ## FE spaces
 #
