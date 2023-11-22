@@ -82,7 +82,7 @@ More information on Julia Environments can be found [here](https://pkgdocs.julia
 First, we will need to log into Gadi. You will receive an email at some point with an invitation to create an account. At the end of the process, you will get a username and password (which you should change). If your username is `aaa777`, you can connect to Gadi by typing
 
 ```bash
-ssh aaa777@gadi.nci.org.au
+ssh -X aaa777@gadi.nci.org.au
 ```
 
 When prompted, enter your password. You should now be logged into Gadi and located in your home directory. We would also recommend setting up passwordless ssh access to Gadi (but it is not required).
