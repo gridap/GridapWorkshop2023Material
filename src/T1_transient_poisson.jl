@@ -22,7 +22,7 @@
 # m(t,u,v) + a(t,u,v) = b(t,v)\quad \forall v\in \ V
 # $$
 
-# Note that $U_g(t)$ is a transient FE space, in the sense that Dirichlet boundary value of functions in $U_g$ _can_ change in time (even though this is not the case in this tutorial). The definition of $m(u,v)$, $a(u,v)$ and $b(v)$ is as follows:
+# Note that $U_t(t)$ is a transient FE space, in the sense that Dirichlet boundary value of functions in $U_t$ _can_ change in time (even though this is not the case in this tutorial). The definition of $m(u,v)$, $a(u,v)$ and $b(v)$ is as follows:
 
 # $$
 # \begin{aligned}
@@ -34,24 +34,21 @@
 
 # ## Discrete model and Triangulation
 
-# As usual, let us first load `Gridap`.
+# As for Poisson, we start by loading the libaries and defining our `DiscreteModel` the `Triangulation`.
+
 using Gridap
 using DrWatson
 
-# First, we define the `DiscreteModel` and the `Triangulation`.
-
 model = CartesianDiscreteModel((0,1,0,1),(20,20))
-Ω  = Interior(model)
+Ω  = Triangulation(model)
 dΩ = Measure(Ω,2)
 
-# ## FE space
+# ## FE spaces
+#
+# The space of test functions is constant in time and is defined like for the steady problem:
 
-# In this tutorial we will use linear Lagrangian Finite Elements.
-refFE = ReferenceFE(lagrangian,Float64,1)
-
-# The space of test functions is constant in time and is defined in steady problems:
-
-V = TestFESpace(model,refFE,dirichlet_tags="boundary")
+reffe = ReferenceFE(lagrangian,Float64,1)
+V = TestFESpace(model,reffe,dirichlet_tags="boundary")
 
 # The trial space is now a `TransientTrialFESpace`, which is constructed from a `TestFESpace` and a function (or vector of functions) for the Dirichlet boundary condition/s. In that case, the boundary condition function is a time-independent constant, but it could also be a time-dependent field depending on the coordinates $x$ and time $t$.
 
@@ -60,7 +57,7 @@ g(t::Real) = x -> g(x,t)
 U = TransientTrialFESpace(V,g)
 
 # ## Weak form
-
+#
 # The weak form of the problem follows the same structure as other `Gridap` tutorials, where we define the bilinear and linear forms to define the `FEOperator`. In this case we need to deal with time-dependent quantities and with the presence of time derivatives. The former is handled by passing the time, $t$, as an additional argument to the form, i.e. $a(t,u,v)$. The latter is defined using the time derivative operator `∂t`.
 
 # The most general way of constructing a transient FE operator is by using the `TransientFEOperator` function, which receives a residual, a jacobian with respect to the unknown and a jacobian with respect to the time derivative.
@@ -84,8 +81,8 @@ b(t,v) = ∫( f(t)*v )dΩ
 op_Af = TransientAffineFEOperator(m,a,b,U,V)
 
 # ### Alternative FE operator definitions
-
-# For time-dependent problems with constant coefficients, which is not the case of this tutorial, one could use the optimized operator `TransientConstantMatrixFEOperator`, which assumes that the matrix contributions ($m$ and $a$) are time-independent. That is:
+#
+# For time-dependent problems with **constant coefficients**, which is not the case of this tutorial, one could use the optimized operator `TransientConstantMatrixFEOperator`, which assumes that the matrix contributions ($m$ and $a$) are time-independent. That is:
 
 m₀(u,v) = ∫( u*v )dΩ
 a₀(u,v) = ∫( κ(0.0)*(∇(u)⋅∇(v)) )dΩ

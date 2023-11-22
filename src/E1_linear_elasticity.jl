@@ -1,8 +1,3 @@
-# In this **exercise**, we will learn
-#
-#  - How to impose Dirichlet boundary conditions only in selected components
-#  - How to impose Dirichlet boundary conditions described by more than one function
-#
 # ## Problem statement
 #
 # We want to solve a linear elasticity problem defined on the 3D domain depicted in next figure.
@@ -37,15 +32,16 @@
 #
 # ## Load and inspect the discrete model
 #
-# On top of it's mesh-generation functionalities, Gridap provides a convenient way to read and write discrete models from and to files. We import the model for this problem from `Gmsh` as follows:
+# On top of it's mesh-generation functionalities, Gridap provides a convenient ways to read and write discrete models from and to files. We import the model for this problem from `GMSH` as follows:
 
 using Gridap, GridapGmsh
+using DrWatson
+
 msh_file_gmsh = projectdir("meshes/elasticity.msh")
 model = GmshDiscreteModel(msh_file_gmsh)
 
-# This model contains the mesh and the physical tags of the model, which have been created directly through `Gmsh`. Another option would be to create the a complicated model using Gridap, then exporting to `.json` format in the followig way: 
+# This model contains the mesh and the physical tags of the model, which have been created directly through `GMSH`. Another option would be to create the model using Gridap, then exporting to `.json` format in the followig way: 
 
-using Gridap.Io
 msh_file_json = projectdir("meshes/elasticity.json")
 to_json_file(model,msh_file_json)
 
@@ -63,9 +59,6 @@ writevtk(model,datadir("elasticity_model"))
 #
 # _Open the resulting files with Paraview. Visualize the faces of the model and color them by each of the available fields. Identify the field names representing the boundaries $\Gamma_{\rm B}$ and $\Gamma_{\rm G}$._
 
-#hint=# Solution for exercise 1
-#sol=writevtk(model,"model")
-
 # ## Set up the vector-valued FE space with Dirichlet BCs in selected components
 #
 # We will construct the vector-valued test FE space as follows:
@@ -82,8 +75,8 @@ writevtk(model,datadir("elasticity_model"))
 # The vector-valued interpolation is selected via the option `valuetype=VectorValue{3,Float64}`, where we use the type `VectorValue{3,Float64}`, which is the way Gridap represents vectors of three `Float64` components.
 #
 # In the next two exercises, we will fill in
-# 1. the `dirichlet_tags` optional argument to identify the Dirichlet regions, and
-# 2. the `dirichlet_masks` optional argument to specify which components of the displacement are constrained.
+#   1. the `dirichlet_tags` optional argument to identify the Dirichlet regions, and
+#   2. the `dirichlet_masks` optional argument to specify which components of the displacement are constrained.
 #
 # Let's go step-by-step.
 #
@@ -200,7 +193,7 @@ op = AffineFEOperator(a,l,U,V0)
 uh = solve(op)
 
 # Finally, we write the results to a file. Note that we also include the strain and stress tensors into the results file.
-using DrWatson
+
 out_file = datadir("elasticity_sol")
 writevtk(Ω,out_file,cellfields=["uh"=>uh,"epsi"=>ε(uh),"sigma"=>σ∘ε(uh)])
 

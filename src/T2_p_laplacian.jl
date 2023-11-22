@@ -1,9 +1,3 @@
-# In this tutorial, we will learn
-#    - How to solve a simple nonlinear PDE in Gridap
-#    - How to define the weak residual and its Jacobian
-#    - How to setup and use a nonlinear solver
-#    - How to define new boundaries from a given discrete model
-#
 # ## Problem statement
 #
 # The goal of this tutorial is to solve a nonlinear PDE in Gridap. For the sake of simplicity, we consider the $p$-Laplacian equation as the model problem. Specifically, the PDE  we want to solve is: find the scalar-field $u$ such that
@@ -90,7 +84,6 @@ dΩ = Measure(Ω,degree)
 #
 # On the one hand, the weak residual is built as follows
 
-using LinearAlgebra: norm
 const p = 3
 flux(∇u) = norm(∇u)^(p-2) * ∇u
 f(x) = 1
@@ -99,6 +92,7 @@ res(u,v) = ∫( ∇(v)⊙(flux∘∇(u)) - v*f )*dΩ
 # Function `res` is the one representing the integrand of the weak residual $[r(u)](v)$. The first argument of function `res` stands for the function $u\in U_g$, where the residual is evaluated, and the second argument stands for a generic test function $v\in V_0$.
 #
 # On the other hand,  we (optionally) implement a function `jac` representing the Jacobian.
+
 dflux(∇du,∇u) = (p-2)*norm(∇u)^(p-4)*(∇u⊙∇du)*∇u+norm(∇u)^(p-2)*∇du
 jac(u,du,v) = ∫( ∇(v)⊙(dflux∘(∇(du),∇(u))) )*dΩ
 
@@ -108,7 +102,9 @@ jac(u,du,v) = ∫( ∇(v)⊙(dflux∘(∇(du),∇(u))) )*dΩ
 
 op = FEOperator(res,jac,Ug,V0)
 
-# Here, we have constructed an instance of `FEOperator`, which is the type that represents a general nonlinear FE problem in Gridap. The constructor takes the functions representing the weak residual and Jacobian, and the test and trial spaces. If only the function for the residual is provided, the Jacobian is computed internally with automatic differentiation.
+# Here, we have constructed an instance of `FEOperator`, which is the type that represents a general nonlinear FE problem in Gridap. The constructor takes the functions representing the weak residual and Jacobian, and the test and trial spaces. If only the function for the residual is provided, the Jacobian is computed internally with automatic differentiation:
+
+op_AD = FEOperator(res,Ug,V0)
 
 #
 # ## Nonlinear solver phase

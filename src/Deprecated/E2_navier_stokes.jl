@@ -1,7 +1,3 @@
-# In this tutorial, we will learn
-#
-#  - How to solve nonlinear multi-field PDEs in Gridap
-#
 # ## Problem statement
 #
 # The goal is to solve a nonlinear multi-field PDE. As a model problem, we consider a well known benchmark in computational fluid dynamics, the lid-driven cavity for the incompressible Navier-Stokes equations.
