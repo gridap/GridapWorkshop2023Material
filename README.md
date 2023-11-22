@@ -33,7 +33,15 @@ If your system has an ssh client, you can clone the repository using the followi
 git clone git@github.com:gridap/GridapWorkshop2023Material.git
 ```
 
-from the terminal. Alternative methods to clone the repository can be found [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
+from the terminal. In order this command to be successful, you will need to generate a pair of public/private SSH keys, and then associate the public key to your GitHub account. You may find some instructions on how to do this [here](https://github.com/MonashMath/SCI1022/blob/master/Git.md#182-connecting-to-github-with-ssh-keys). If, for whatever reason, you are not able to succeed, you may also try:
+
+```bash
+git clone https://github.com/gridap/GridapWorkshop2023Material.git
+```
+
+which does not require the aforementioned pair of public/private SSH keys.
+
+Alternative methods to clone the repository can be found [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 
 Once you have cloned the repository, you can pull the most up-to-date changes with the following command executed from the root directory of the repository:
 
