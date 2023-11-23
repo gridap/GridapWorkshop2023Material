@@ -14,7 +14,7 @@ For the Gadi supercomputer, you will get an invitation from the instructors to c
 workshop.
 
 **NOTE**: In the case you have any issues while following these instructions, please fill an issue [here](https://github.com/gridap/GridapWorkshop2023Material/issues) 
-and we will try to help you out. This will also help other participants what may have the same issue.
+and we will try to help you out. This will also help other participants that may have the same issue.
 
 ## Required software
 
