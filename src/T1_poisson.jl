@@ -2,7 +2,7 @@
 #
 # In this first tutorial, we provide an overview of a complete simulation pipeline in Gridap: from the construction of the FE mesh to the visualization of the computed results. To this end, we consider a simple model problem: the Poisson equation.
 # 
-# We want to solve the Poisson equation on the 3D cartesian domain $[-\pi,\pi]\times[-\pi/2,\pi/2]\times[0,1]$ with Dirichlet and Neumann boundary conditions. Neumann boundary conditions are applied on $\Gamma_{\rm D} = \{ z = 0 \} \cup \{ z = 1 \}$, i.e the bottom and top boundaries. Dirichlet boundary conditions are applied everywhere else, i.e $\Gamma_{\rm D} = \{ x = -\pi \} \cup \{ x = \pi \} \cup \{ y = -\pi/2 \} \cup \{ y = \pi/2 \}$.
+# We want to solve the Poisson equation on the 3D cartesian domain $[-\pi,\pi]\times[-\pi/2,\pi/2]\times[0,1]$ with Dirichlet and Neumann boundary conditions. Neumann boundary conditions are applied on $\Gamma_{\rm N} = \{ z = 0 \} \cup \{ z = 1 \}$, i.e the bottom and top boundaries. Dirichlet boundary conditions are applied everywhere else, i.e $\Gamma_{\rm D} = \{ x = -\pi \} \cup \{ x = \pi \} \cup \{ y = -\pi/2 \} \cup \{ y = \pi/2 \}$.
 #
 #  Formally, the problem to solve is: find the scalar field $u$ such that
 #
@@ -11,12 +11,12 @@
 # \begin{aligned}
 # -\Delta u = f  \ &\text{in} \ \Omega,\\
 # u = g \ &\text{on}\ \Gamma_{\rm D},\\
-# \nabla u\cdot n = h \ &\text{on}\  \Gamma_{\rm N},\\
+#  n \cdot \nabla u = h \ &\text{on}\  \Gamma_{\rm N},\\
 # \end{aligned}
 # \right.
 # $$
-#  being $n$ the outwards unit normal vector to the Neumann boundary $\Gamma_{\rm N}$. 
-# In this tutorial, we will try to recover an analytical solution $u_0(x,y,z) = cos(x)*sin(y+π)$ and analyze the convergence rates of our numerical approximation.
+#  with $n$ being  the outwards unit normal vector to the Neumann boundary $\Gamma_{\rm N}$. 
+# In this tutorial, we will try to recover an analytical solution $u_0(x,y,z) = {\rm cos}(x)\ {\rm sin}(y+π)$ and analyze the convergence rates of our numerical approximation.
 #
 #  ## Numerical scheme
 #
