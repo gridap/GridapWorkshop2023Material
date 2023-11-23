@@ -1,5 +1,6 @@
 module purge
 module load pbs
+module load julia
 
 module load intel-compiler-llvm/2023.2.0
 module load intel-mpi/2021.10.0
