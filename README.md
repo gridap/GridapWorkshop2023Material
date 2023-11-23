@@ -4,12 +4,17 @@ title = "Software install instructions and material"
  
 # GridapWorkshop2023Material
 
+*Latest update: 23/11/2023*
+
 The practical part of the workshop will consist of instructors' guided hands-on tutorials and exercises.
 This will be carried out  either
 on the attendees laptops (mostly first day) or the [Gadi supercomputer](https://opus.nci.org.au/display/Help/Gadi+User+Guide) at 
 NCI (mostly second day). You will find below the instructions to set up the software environment required in both cases.
 For the Gadi supercomputer, you will get an invitation from the instructors to create an account prior to the 
 workshop.
+
+**NOTE**: In the case you have any issues while following these instructions, please fill an issue [here](https://github.com/gridap/GridapWorkshop2023Material/issues) 
+and we will try to help you out. This will also help other participants what may have the same issue.
 
 ## Required software
 
