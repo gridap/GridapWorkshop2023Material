@@ -11,7 +11,7 @@ using Gridap
 using GridapDistributed
 using PartitionedArrays
 
-# We start by creating our distributed rank indexes, which plays the role of the more traditional communicator (such as MPI.COMM_WORLD). 
+# We start by creating our distributed rank indices, which plays the role of the more traditional communicator (such as MPI.COMM_WORLD). 
 
 nprocs = (2,1)
 ranks  = with_debug() do distribute
