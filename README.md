@@ -123,7 +123,7 @@ For those users which are more comfortable with graphical interfaces, the instru
 
 ## Creating a system image
 
-Unfortunately, there is distributed version of the Julia REPL. This means running MPI codes interactively is not possible. Moreover, Julia notoriously suffers from long TTFX (Time To First eXecution) times due to Just-In-Time compilation. Although this problem is being the focus of the latest releases, it can still be tedious to work within an edit-run-debug cycle.
+Unfortunately, there is no parallel distributed version of the Julia REPL. This means running MPI codes interactively is not possible. Moreover, Julia notoriously suffers from long TTFX (Time To First eXecution) times due to Just-In-Time (JIT) compilation. Although this issue is being the focus of the latest releases, it can still be tedious to work within an edit-run-debug cycle.
 
 To alleviate this problem, we will create a system image that contains all the packages we will need during the workshop. This will allow us to start Julia with the system image preloaded, and thus avoid the long TTFX times.
 
