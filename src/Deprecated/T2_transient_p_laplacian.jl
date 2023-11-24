@@ -5,10 +5,10 @@
 # $$
 # \left\lbrace
 # \begin{aligned}
-# \frac{\partial u(t)}{\partial t} -\kappa(t) \nabla \cdot \left( |\nabla u|^{p-2} \ \nabla u \right) = f(t)  \ &\text{in} \ \Omega,\\
-# u(t) = 0 \ &\text{on}\ \Gamma_{\rm D},\\
-# u(0) = 0 \ &\text{in}\ \Omega, \\
-# \left( |\nabla u|^{p-2}\ \nabla u \right)\cdot n = 0 \ &\text{on} \ \Gamma_{\rm N}
+# \frac{\partial u(t)}{\partial t} -\kappa(t) \nabla \cdot \left( |\nabla u|^{p-2} \ \nabla u \right) = f(t)  \ &\text{ in } \ \Omega,\\
+# u(t) = 0 \ &\text{ on }\ \Gamma_{\rm D},\\
+# u(0) = 0 \ &\text{ in }\ \Omega, \\
+# \left( |\nabla u|^{p-2}\ \nabla u \right)\cdot n = 0 \ &\text{ on } \ \Gamma_{\rm N}
 # \end{aligned}
 # \right.
 # $$

@@ -15,10 +15,10 @@
 # $$
 #    \left\lbrace
 #    \begin{aligned}
-#       \Kappa^{-1} u + \nabla p = {\bf 0}  \ &\text{in} \ \Omega,\\
-#       \nabla \cdot u = f  \ &\text{in} \ \Omega,\\
-#       p = g \ &\text{on}\ \Gamma_{\rm N},\\
-#       u \cdot n = h \ &\text{on}\  \Gamma_{\rm D},\\
+#       \Kappa^{-1} u + \nabla p = {\bf 0}  \ &\text{ in } \ \Omega,\\
+#       \nabla \cdot u = f  \ &\text{ in } \ \Omega,\\
+#       p = g \ &\text{ on }\ \Gamma_{\rm N},\\
+#       u \cdot n = h \ &\text{ on }\  \Gamma_{\rm D},\\
 #    \end{aligned}
 #    \right.
 # $$

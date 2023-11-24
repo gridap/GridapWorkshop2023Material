@@ -9,9 +9,9 @@
 # $$
 # \left\lbrace
 # \begin{aligned}
-# \frac{\partial u(t)}{\partial t} -\kappa(t)\Delta u(t) = f(t)  \ &\text{in} \ \Omega,\\
-# u(t) = 0 \ &\text{on}\ \Gamma_{\rm D},\\
-# u(0) = 0 \ &\text{in}\ \Omega\\
+# \frac{\partial u(t)}{\partial t} -\kappa(t)\Delta u(t) = f(t)  \ &\text{ in } \ \Omega,\\
+# u(t) = 0 \ &\text{ on }\ \Gamma_{\rm D},\\
+# u(0) = 0 \ &\text{ in }\ \Omega\\
 # \end{aligned}
 # \right.
 # $$
