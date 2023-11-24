@@ -12,7 +12,7 @@
 # -∇\cdot\sigma(u) = 0 \ &\text{ in } \ \Omega,\\
 # u = 0 \ &\text{ on }\ \Gamma_{\rm G},\\
 # u_1 = \delta \ &\text{ on }\ \Gamma_{\rm B},\\
-# \sigma(u)\cdot n = 0 \ &\text{ on }\  \Gamma_{\rm N}.\\
+# n \cdot \sigma(u)  = 0 \ &\text{ on }\  \Gamma_{\rm N}.\\
 # \end{aligned}
 # \right.
 # $$

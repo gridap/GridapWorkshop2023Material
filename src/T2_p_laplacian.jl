@@ -8,7 +8,7 @@
 # -\nabla \cdot \left( |\nabla u|^{p-2} \ \nabla u \right) = f\ &\text{ in }\ \Omega,\\
 # u = 0 \ &\text{ on } \ \Gamma_0,\\
 # u = g \ &\text{ on } \ \Gamma_g,\\
-# \left( |\nabla u|^{p-2}\ \nabla u \right)\cdot n = 0 \ &\text{ on } \ \Gamma_{\rm N},
+#  n \cdot \left( |\nabla u|^{p-2}\ \nabla u \right)= 0 \ &\text{ on } \ \Gamma_{\rm N},
 # \end{aligned}
 # \right.
 # $$
