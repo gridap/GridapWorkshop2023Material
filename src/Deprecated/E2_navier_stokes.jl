@@ -22,7 +22,7 @@
 #
 # ## Numerical Scheme
 #
-# In order to approximate this problem we chose a formulation based on inf-sub stable $Q_k/P_{k-1}$ elements with continuous velocities and discontinuous pressures. The interpolation spaces are defined as follows. The velocity interpolation space is
+# In order to approximate this problem we chose a formulation based on inf-sup stable $Q_k/P_{k-1}$ elements with continuous velocities and discontinuous pressures. The interpolation spaces are defined as follows. The velocity interpolation space is
 #
 # $$
 # V \doteq \{ v \in [C^0(\Omega)]^d:\ v|_T\in [Q_k(T)]^d \text{ for all } T\in\mathcal{T} \},

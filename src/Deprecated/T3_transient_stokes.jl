@@ -24,7 +24,7 @@
 #
 # ## Numerical scheme
 #
-# In order to approximate this problem **in space** we chose a formulation based on inf-sub stable $\boldsymbol{Q}_k/Q_{k-1}$ elements with continuous velocities and pressure pairs, the so called Taylor-Hood FEs. The interpolation spaces are defined as follows. The velocity interpolation space is
+# In order to approximate this problem **in space** we chose a formulation based on inf-sup stable $\boldsymbol{Q}_k/Q_{k-1}$ elements with continuous velocities and pressure pairs, the so called Taylor-Hood FEs. The interpolation spaces are defined as follows. The velocity interpolation space is
 #
 # $$
 # V \doteq \{ v \in [C^0(\Omega)]^d:\ v|_T\in [Q_k(T)]^d \text{ for all } T\in\mathcal{T} \},
