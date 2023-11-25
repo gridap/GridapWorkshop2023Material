@@ -3,9 +3,8 @@
 # The goal is to solve a nonlinear multi-field PDE. As a model problem, we consider a well known benchmark in computational fluid dynamics, the laminar flow around a cyclinder for the incompressible Navier-Stokes equations. We will solve this problem by building on the concepts seen in the previous tutorials.
 #
 # The computational domain $\Omega$ is a 2-dimensional channel. The fluid enters the channel from the left boundary (inlet) and exits through the right boundary (outlet). The channel has a cylindrical obstacle near the inlet. The domain can be seen in the following figure:
-# <div>
-# <img src="../figures/ins/perforated_plate.png" width="400"/>
-# </div>
+# 
+# ![](../figures/ins/perforated_plate.png)
 #
 # We define $\partial \Omega = \Gamma_{w} \cup \Gamma_{c} \cup \Gamma_{in} \cup \Gamma_{out}$ with $\Gamma_{w}$ the top and bottom channel walls, $\Gamma_{c}$ the cylinder walls, $\Gamma_{in}$ the inlet and $\Gamma_{out}$ the outlet.
 #
