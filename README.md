@@ -24,8 +24,8 @@ Before being able to work on the workshop material, you will need to install the
 - Download and install Julia based on the platform you are using from the [Julia](https://julialang.org/downloads/platform/) home page.
 - Download and install VSCode based on the platform you are using from the [VSCode](https://code.visualstudio.com/download) home page. 
 - [Install](https://www.julia-vscode.org/docs/dev/gettingstarted/#Installing-the-Julia-extension) and [configure](https://www.julia-vscode.org/docs/dev/gettingstarted/#Configuring-the-Julia-extension) the [Julia extension for VSCode](https://code.visualstudio.com/docs/languages/julia). Some interesting features of the Julia extension for VSCode are covered in the following [YouTube](https://www.youtube.com/watch?v=IdhnP00Y1Ks&t=125s) video.
-- Install [Paraview](https://www.paraview.org/download/) post-processing software. We will use the basic features of ParaView. In any case, if you are 
-  keen on learning more,  there is a whole [YouTube channel](https://www.youtube.com/playlist?list=PLvkU6i2iQ2fpcVsqaKXJT5Wjb9_ttRLK-) on Paraview that will give you many more ideas. 
+- Install [ParaView](https://www.paraview.org/download/) post-processing software. We will use the basic features of ParaView. In any case, if you are 
+  keen on learning more,  there is a whole [YouTube channel](https://www.youtube.com/playlist?list=PLvkU6i2iQ2fpcVsqaKXJT5Wjb9_ttRLK-) on ParaView that will give you many more ideas. 
 - Finally, you will need an **ssh** client to connect to Gadi. Generally, every modern OS should have one installed by default. To check if you have one, open a terminal and type `ssh`. If a message like `usage: ssh ...` appears, you are good to go.
 
 ## Getting the workshop material
@@ -119,7 +119,7 @@ The first line sets up `MPI.jl` to work with the Intel-MPI binaries installed on
 
 ## Accessing to Gadi using ARE (graphical interface on the web browser)
 
-For those users which are more comfortable with graphical interfaces, the instructions in the previous section can also be followed on a terminal opened in your web browser using the so-called [ARE-Australian Research Environment](https://opus.nci.org.au/display/Help/ARE+User+Guide). ARE will also allow you to open a Virtual Desktop on the web browser, and run Paraview there, so that you can visualize the results of your simulations without having to download the data files to your local computer (which might be heavy for large scale problems). You can find ARE usage instructions [here](https://opus.nci.org.au/display/Help/ARE+User+Guide).
+For those users which are more comfortable with graphical interfaces, the instructions in the previous section can also be followed on a terminal opened in your web browser using the so-called [ARE-Australian Research Environment](https://opus.nci.org.au/display/Help/ARE+User+Guide). ARE will also allow you to open a Virtual Desktop on the web browser, and run ParaView on Gadi, so that you can visualize the results of your simulations without having to download the data files to your local computer (which might be heavy for large scale problems). You can find ARE usage instructions [here](https://opus.nci.org.au/display/Help/ARE+User+Guide).
 
 ## Creating a system image
 

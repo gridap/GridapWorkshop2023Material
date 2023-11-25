@@ -145,7 +145,7 @@ writevtk(Ω,datadir("poisson"),cellfields=["uh"=>uh])
 
 #  which will generate a file named `poisson_sol.vtu` having a nodal field named `"uh"` containing the solution of our problem (see next figure).
 #
-# ![](../figures/poisson/fig_uh.png)
+# ![](../_assets/literate_figures/poisson/fig_uh.png)
 #
 # Additionaly, we can compute the L2 error of the numerical solution as follows:
 

@@ -49,7 +49,7 @@ to_json_file(model,msh_file_json)
 
 model = DiscreteModelFromFile(msh_file_json)
 
-# You can easily inspect the generated discrete model in [Paraview](https://www.paraview.org/) by writing it in `vtk` format.
+# You can easily inspect the generated discrete model in [ParaView](https://www.paraview.org/) by writing it in `vtk` format.
 
 writevtk(model,datadir("elasticity_model"))
 
@@ -57,7 +57,7 @@ writevtk(model,datadir("elasticity_model"))
 
 # ### Exercise 1
 #
-# _Open the resulting files with Paraview. Visualize the faces of the model and color them by each of the available fields. Identify the field names representing the boundaries $\Gamma_{\rm B}$ and $\Gamma_{\rm G}$._
+# _Open the resulting files with ParaView. Visualize the faces of the model and color them by each of the available fields. Identify the field names representing the boundaries $\Gamma_{\rm B}$ and $\Gamma_{\rm G}$._
 
 # ## Set up the vector-valued FE space with Dirichlet BCs in selected components
 #

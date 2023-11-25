@@ -71,7 +71,7 @@
 # 
 # _Create a discrete model of a $100\times100$ Cartesian mesh of the unit square. Then create two new boundary tags,  namely `"diri1"` and `"diri0"`, one for the top side of the square (where the velocity is non-zero), and another for the rest of the boundary (where the velocity is zero)._
 #hint= **Hint:** Use the function `add_tag_from_tags!` to construct new boundary tags from pre-existing cartesian tags. Remember that the cartesian tags are in lexicographic order.
-#hint= **Hint:** You can also print the model to `.vtk` and visualize the tags with Paraview.
+#hint= **Hint:** You can also print the model to `.vtk` and visualize the tags with ParaView.
 
 using Gridap
 #hint=# Solution of exercise 1

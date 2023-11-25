@@ -86,7 +86,7 @@ model = GmshDiscreteModel(msh_file)
 
 # ### Exercise 1
 #
-# _Open the resulting files with Paraview. Visualize the faces of the model and color them by each of the available fields. Identify the tag names representing the boundaries $\Gamma_{w}$ (top and bottom channel walls), $\Gamma_{c}$ (cylinder walls), $\Gamma_{in}$ (inlet) and $\Gamma_{out}$ (outlet)._
+# _Open the resulting files with ParaView. Visualize the faces of the model and color them by each of the available fields. Identify the tag names representing the boundaries $\Gamma_{w}$ (top and bottom channel walls), $\Gamma_{c}$ (cylinder walls), $\Gamma_{in}$ (inlet) and $\Gamma_{out}$ (outlet)._
 
 writevtk(model,datadir("perforated_plate"))
 
