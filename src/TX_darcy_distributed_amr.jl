@@ -280,7 +280,7 @@ end
 
 # We then call the `amr_loop` function with `αr=0.1` and `αc=0.05` meaning that approximately 15% and 5% of the cells will approximately be refined and coarsened, respectively, at each adaptation step.  
 
-order=0
+order=1
 αr=0.10
 αc=0.05
 num_amr_steps=10
@@ -303,8 +303,7 @@ end
 # ## Homework
 # * Deactivate `redistributed_load` in the `amr_loop` function call. Then, observe in ParaView the load distribution among parallel tasks, and compare it against the one in which the load is re-balanced at each step.
 # * Extend the code such that it compares error decay between uniform refinement and AMR.
-# * Study error decay of `order=0` versus `order`=1.
-# * Study refinement patterns for different values of αr and αc.
+# * Study error decay of `order=0` versus `order=1`.
 # * Study error decay and refinement patters for different values of $\gamma$, $\alpha_r$, $\alpha_c$.
 # * Extend the present tutorial to 3D. 
 
