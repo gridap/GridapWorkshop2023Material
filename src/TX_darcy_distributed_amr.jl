@@ -34,7 +34,7 @@
 # Besides, using Darcy's law (i.e., first equation of the system above), we manufacture $u_{\rm exact}=-\Kappa \nabla p_{\rm exact}$. 
 
 # The solution $p_{\rm exact}(\boldsymbol{x})$ has a sharp circular/spherical wave front of radius $r$ centered at $\boldsymbol{x}_c$. For example, for the combination of parameter values $\gamma=200$, $r=0.7$, and $\boldsymbol{x}_c=(-0.05, -0.05)$, $p_{\rm exact}(\boldsymbol{x})$ looks as in the picture below:
-# ![](../figures/darcy_amr/circular_sharp_wave_2d_scaled.png)
+# ![](../figures/darcy_amr/circular_sharp_wave_2d.png)
 # As consequence of the multi-scale features of this solution, uniform mesh refinement techniques can only reduce the error at a very slow pace with increasing mesh resolution, and thus are very computationally inefficient. 
 
 # ## Problem statement (weak form)
