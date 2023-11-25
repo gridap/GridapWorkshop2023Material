@@ -39,9 +39,9 @@ global_ncells = num_cells(model)
 local_ncells  = map(num_cells,local_views(model))
 
 # This overlap is due to ghost cells. The Owned/Ghost layout of the current distributed model can be seen in the next figure:
-# <div>
-# <img src="../figures/distributed/gids_cells.png" width="400"/>
-# </div>
+#
+# ![](../figures/distributed/gids_cells.png)
+#
 #
 # This information is also stored on the distributed model, and can be accessed in the following way:
 
@@ -69,9 +69,9 @@ V = FESpace(model,reffe)
 U = TrialFESpace(V)
 
 # The DoF layout can be seen in the following figure
-# <div>
-# <img src="../figures/distributed/gids_dofs.png" width="400"/>
-# </div>
+#
+# ![](../figures/distributed/gids_dofs.png)
+#
 # and can be accessed as follows:
 
 dof_gids = V.gids
