@@ -1,6 +1,5 @@
 module purge
 module load pbs
-module load julia/1.8.5
 
 module load intel-compiler-llvm/2023.2.0
 module load intel-mpi/2021.10.0
@@ -12,6 +11,7 @@ export JULIA_MPI_PATH=$INTEL_MPI_ROOT
 # Julia setup
 export PROJECT="vp91"
 
+export PATH=/scratch/$PROJECT/gridap-workshop/julia/julia-1.8.5/bin:$PATH
 SCRATCH="/scratch/$PROJECT/$USER"
 export JULIA_DEPOT_PATH="$SCRATCH/.julia"
 
