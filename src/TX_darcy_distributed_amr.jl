@@ -199,7 +199,7 @@ model=OctreeDistributedDiscreteModel(ranks,coarse_model,num_uniform_refinement_s
 # summarized as follows:
 
 # 1. Compute an approximate finite element solution $(u_h,p_h)$ for the Darcy problem using the current mesh.
-# 2. Compute $e_K$ for all cells $K$ in the mesh using $(u_h,p_h)$. In general, $e_K$ is an error indicator such as, e.g., an a-posteriori error estimator [4] at that cell. In this particular tutorial, as we know the true solution $p_{\rm exact}$,  we will use the true error norm $e_K=||u_h-u_{\rm exact}||_{L^2(K)}$ instead.
+# 2. Compute $e_K$ for all cells $K$ in the mesh using $(u_h,p_h)$. In general, $e_K$ is an error indicator such as, e.g., an a-posteriori error estimator [4]. In this particular tutorial, as we know the true solution $u_{\rm exact}$,  we will use the true error norm $e_K=||u_h-u_{\rm exact}||_{L^2(K)}$ instead.
 # 3. Given user-defined refinement and coarsening fractions, denoted by $\alpha_r$ and $\alpha_c$, resp., find thresholds $\theta_r$ and $\theta_c$ such that the number of cells with $e_K >\theta_r$  (resp., $e_K < \theta_c$)  is (approximately) a fraction $\alpha_r$  (resp., $\alpha_c$) of the number of cells in the mesh.
 # 4. Refine and coarsen the mesh cells, i.e., generate a new mesh,  accordingly to the input provided by the previous step.
 # 5. (Optionally) Dynamically balance load among the parallel tasks.
@@ -304,7 +304,7 @@ end
 # * Deactivate `redistributed_load` in the `amr_loop` function call. Then, observe in ParaView the load distribution among parallel tasks, and compare it against the one in which the load is re-balanced at each step.
 # * Extend the code such that it compares error decay between uniform refinement and AMR.
 # * Study error decay of `order=0` versus `order=1`.
-# * Study error decay and refinement patters for different values of $\gamma$, $\alpha_r$, $\alpha_c$.
+# * Study error decay and refinement patterns for different values of $\gamma$, $\alpha_r$, $\alpha_c$.
 # * Extend the present tutorial to 3D. 
 
 # ## References
