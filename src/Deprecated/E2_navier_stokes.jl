@@ -22,7 +22,7 @@
 #
 # ## Numerical Scheme
 #
-# In order to approximate this problem we chose a formulation based on inf-sup stable $Q_k/P_{k-1}$ elements with continuous velocities and discontinuous pressures. The interpolation spaces are defined as follows. The velocity interpolation space is
+# In order to approximate this problem we choose a formulation based on inf-sup stable $Q_k/P_{k-1}$ elements with continuous velocities and discontinuous pressures. The interpolation spaces are defined as follows. The velocity interpolation space is
 #
 # $$
 # V \doteq \{ v \in [C^0(\Omega)]^d:\ v|_T\in [Q_k(T)]^d \text{ for all } T\in\mathcal{T} \},
@@ -102,7 +102,7 @@ using Gridap
 reffeₚ = ReferenceFE(lagrangian,Float64,order-1;space=:P)
 Q = TestFESpace(model,reffeₚ,conformity=:L2,constraint=:zeromean)
 
-# With the options `:Lagrangian`, `space=:P`, `valuetype=Float64`, and `order=order-1`, we select the local polynomial space $P_{k-1}(T)$ on the cells $T\in\mathcal{T}$. With the symbol `space=:P` we specifically chose a local Lagrangian interpolation of type "P". Without using `space=:P`, would lead to a local Lagrangian of type "Q" since this is the default for quadrilateral or hexahedral elements. On the other hand, `conformity=:L2,constraint=:zeromean` leads to a FE space, whose functions are constrained to have mean value equal to zero, which is just what we need for the pressure space.
+# With the options `:Lagrangian`, `space=:P`, `valuetype=Float64`, and `order=order-1`, we select the local polynomial space $P_{k-1}(T)$ on the cells $T\in\mathcal{T}$. With the symbol `space=:P` we specifically choose a local Lagrangian interpolation of type "P". Without using `space=:P`, would lead to a local Lagrangian of type "Q" since this is the default for quadrilateral or hexahedral elements. On the other hand, `conformity=:L2,constraint=:zeromean` leads to a FE space, whose functions are constrained to have mean value equal to zero, which is just what we need for the pressure space.
 #
 # ### Exercise 3
 #

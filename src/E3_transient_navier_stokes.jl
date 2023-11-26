@@ -46,7 +46,7 @@
 #
 # ## Numerical Scheme
 #
-# In order to approximate this problem we chose the same formulation as before, namely a formulation based on inf-sup stable $P_{k}/P_{k-1}$ triangular elements with continuous velocities and pressures. The interpolation spaces are defined as follows. The velocity interpolation space is
+# In order to approximate this problem we choose the same formulation as before, namely a formulation based on inf-sup stable $P_{k}/P_{k-1}$ triangular elements with continuous velocities and pressures. The interpolation spaces are defined as follows. The velocity interpolation space is
 #
 # $$
 # V \doteq \{ v \in [H^1(\Omega)]^d:\ v|_T\in [P_k(T)]^d \text{ for all } T\in\mathcal{T} \},
