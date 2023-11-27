@@ -217,3 +217,6 @@ end
 #
 # ![](../figures/poisson/convergence.png)
 #
+# ## References
+#
+# [1] C. Johnson. *Numerical Solution of Partial Differential Equations by the Finite Element Method*. Dover Publications, 2009.
