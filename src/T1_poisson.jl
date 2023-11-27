@@ -151,7 +151,7 @@ writevtk(Ω,datadir("poisson"),cellfields=["uh"=>uh])
 
 dΩe  = Measure(Ω,degree*2)
 e = uh - u₀
-l2_error = sum(∫(e⋅e)*dΩe)
+l2_error = sqrt(sum(∫(e⋅e)*dΩe))
 
 # ## Convergence analysis
 # 
@@ -184,7 +184,7 @@ function driver(n,order)
 
   dΩe  = Measure(Ω,degree*2)
   e = uh - u₀
-  return sum(∫(e⋅e)*dΩe)
+  return sqrt(sum(∫(e⋅e)*dΩe))
 end
 
 # We then run the driver for different values of $n$ and $p$, saving the values of the L2 error for each configuration. 
