@@ -13,9 +13,9 @@
 # \right.
 # $$
 # with $p>2$.
-# The computational domain $\Omega$ is the one depicted in next figure, which is the same as in the first tutorial. However, we slightly change the boundary conditions here. We impose homogeneous Dirichlet and homogeneous Neumann boundary conditions on $\Gamma_0$ and $\Gamma_{\rm N}$  respectively, and in-homogeneous Dirichlet conditions on $\Gamma_g$. The Dirichlet boundaries $\Gamma_0$ and $\Gamma_g$ are defined as the closure of the green and blue surfaces in next figure respectively, whereas the Neumann boundary is $\Gamma_{\rm N}\doteq\partial\Omega \setminus (\Gamma_0\cup\Gamma_g)$. In this example, we consider the values $p=3$, $f=1$, and $g=2$.
+# The computational domain $\Omega$ is the one depicted in next figure. We want to solve the Poisson equation on the 3D domain depicted in next figure with Dirichlet and Neumann boundary conditions. We impose homogeneous Dirichlet and homogeneous Neumann boundary conditions on $\Gamma_0$ and $\Gamma_{\rm N}$  respectively, and inhomogeneous Dirichlet conditions on $\Gamma_g$. The Dirichlet boundaries $\Gamma_0$ and $\Gamma_g$ are defined as the closure of the green and blue surfaces in next figure respectively, whereas the Neumann boundary is $\Gamma_{\rm N}\doteq\partial\Omega \setminus (\Gamma_0\cup\Gamma_g)$. In this example, we consider the values $p=3$, $f=1$, and $g=2$.
 #
-# ![](../assets/p_laplacian/model.png)
+# ![](../figures/p_laplacian/model.png)
 #
 # ## Numerical scheme
 #
@@ -38,6 +38,7 @@
 # As in previous tutorials, the first step to solve the PDE is to load a discretization of the computational domain. In this case, we load the model from the same file as in the first tutorial
 
 using Gridap
+using DrWatson
 model = DiscreteModelFromFile("meshes/poisson.json")
 
 # As stated before, we want to impose Dirichlet boundary conditions on $\Gamma_0$ and $\Gamma_g$,  but none of these boundaries is identified in the model. E.g., you can easily see by writing the model in vtk format
@@ -46,7 +47,7 @@ writevtk(model,"model")
 
 # and by opening the file `"model_0"` in ParaView that the boundary identified as `"sides"` only includes the vertices in the interior of $\Gamma_0$, but here we want to impose Dirichlet boundary conditions in the closure of $\Gamma_0$, i.e., also on the vertices on the contour of $\Gamma_0$. Fortunately, the objects on the contour of $\Gamma_0$ are identified  with the tag `"sides_c"` (see next figure). Thus, the Dirichlet boundary $\Gamma_0$ can be built as the union of the objects identified as `"sides"` and `"sides_c"`.
 #
-# ![](../assets/p_laplacian/sides_c.png)
+# ![](../figures/p_laplacian/sides_c.png)
 #
 # Gridap provides a convenient way to create new object identifiers (referred to as "tags") from existing ones. First, we need to extract from the model, the object that holds the information about the boundary identifiers (referred to as `FaceLabeling`):
 
@@ -130,6 +131,6 @@ uh, = solve!(uh0,solver,op)
 
 # We finish this tutorial by writing the computed solution for visualization (see next figure).
 
-writevtk(Ω,"data/p_laplacian",cellfields=["uh"=>uh])
+writevtk(Ω,datadir("p_laplacian"),cellfields=["uh"=>uh])
 
-# ![](../assets/p_laplacian/sol-plap.png)
+# ![](../figures/p_laplacian/sol-plap.png)
