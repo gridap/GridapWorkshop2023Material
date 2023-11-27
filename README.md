@@ -147,7 +147,7 @@ julia -e 'using Pkg; Pkg.add("PackageCompiler")'
 Next, run the following commands from the `/gadi` directory to launch a remote job that creates the system image
 
 ```bash
-qsub compilation/compile.sh
+qsub compile/compile.sh
 ```
 
 This will take a while (around 30 mins), and will create a system image `GadiTutorial.so` in the `/gadi` directory. You can see the status of the job by running `qstat`.
