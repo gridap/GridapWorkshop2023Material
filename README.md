@@ -155,5 +155,5 @@ This will take a while (around 30 mins), and will create a system image `GadiTut
 You can then test this sysimage by running
 
 ```bash
-julia --project=. -JGadiTutorial.so compilation/warmup.jl
+julia --project=. -JGadiTutorial.so compile/warmup.jl
 ```
