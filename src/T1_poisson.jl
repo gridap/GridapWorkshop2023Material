@@ -149,8 +149,9 @@ writevtk(Ω,datadir("poisson"),cellfields=["uh"=>uh])
 #
 # Additionaly, we can compute the L2 error of the numerical solution as follows:
 
+dΩe  = Measure(Ω,degree*2)
 e = uh - u₀
-l2_error = sum(∫(e⋅e)*dΩ)
+l2_error = sum(∫(e⋅e)*dΩe)
 
 # ## Convergence analysis
 # 
@@ -181,8 +182,9 @@ function driver(n,order)
   solver = LinearFESolver(ls)
   uh = solve(solver,op)
 
+  dΩe  = Measure(Ω,degree*2)
   e = uh - u₀
-  return sum(∫(e⋅e)*dΩ)
+  return sum(∫(e⋅e)*dΩe)
 end
 
 # We then run the driver for different values of $n$ and $p$, saving the values of the L2 error for each configuration. 
