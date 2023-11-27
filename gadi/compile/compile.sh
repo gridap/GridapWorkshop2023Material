@@ -1,9 +1,9 @@
 #!/bin/bash
-#PBS -P vt91
+#PBS -P vp91
 #PBS -q normal
-#PBS -l walltime=00:30:00
+#PBS -l walltime=01:00:00
 #PBS -l ncpus=1
-#PBS -l mem=4gb
+#PBS -l mem=16gb
 #PBS -N gw_build
 #PBS -l wd
 

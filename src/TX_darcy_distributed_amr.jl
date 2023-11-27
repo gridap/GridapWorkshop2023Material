@@ -137,7 +137,7 @@ end
 
 # For convenience, we also define a function to compute the errors among the finite element solution and the exact solution. We will be also using the function at each level of the AMR hierarchy.
 
-function compute_error_darcy(model,degree,xh)
+function compute_error_darcy(model,order,xh)
   Ω = Triangulation(model)
   degree = 4*(order+1)
   dΩ = Measure(Ω,degree)
@@ -238,7 +238,7 @@ function amr_loop(model, order, num_amr_steps, αr, αc;
     end
     
     ## Compute error among finite element solution and exact solution
-    l2eu,hdiveu,l2ep=compute_error_darcy(model,2*order+1,xh)
+    l2eu,hdiveu,l2ep=compute_error_darcy(model,order,xh)
     append!(l2eu_x_level,l2eu)
     append!(hdiveu_x_level,hdiveu)
     append!(l2pe_x_level,l2ep)

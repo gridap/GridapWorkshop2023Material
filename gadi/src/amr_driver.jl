@@ -1,29 +1,40 @@
 
-function main_amr(;nprocs,nrefs=1,num_amr_steps=1,generate_vtk_files=true,redistribute_load=true)
-  with_mpi() do distribute
-    main_amr(distribute,nprocs,nrefs,num_amr_steps,options,generate_vtk_files,redistribute_load)
+function main_amr(;nprocs,                 # Number of processors
+                   nrefs=3,                # Number of initial refinements
+                   num_amr_steps=4,        # Number of AMR steps
+                   order=0,                # Finite element order
+                   αr = 0.10,              # Percentage of refined cells per AMR iteration
+                   αc = 0.05,              # Percentage of coarsened cells per AMR iteration
+                   options=OPTIONS_MUMPS, # PETSc solver options
+                   generate_vtk_files=true,
+                   redistribute_load=true)
+  ranks = with_mpi() do distribute
+    distribute(LinearIndices((prod(nprocs),)))
   end
-end
-
-function main_amr(distribute,nprocs,nrefs,num_amr_steps,options,generate_vtk_files,redistribute_load)
-  ranks = distribute(LinearIndices((prod(nprocs),)))
-
-  γ, r, xc = 100.0, 0.7, VectorValue(-0.05, -0.05)
-  p_exact(x) = atan(γ * (sqrt((x[1] - xc[1])^2 + (x[2] - xc[2])^2) - r))
-  u_exact(x) = -∇(p_exact)(x)
-  f(x) = (∇⋅u_exact)(x)
 
   coarse_model = CartesianDiscreteModel((0,1,0,1),(1,1))
   model = OctreeDistributedDiscreteModel(ranks,coarse_model,nrefs)
 
-  order = 1; αr = 0.10; αc = 0.05
-  final_model,ndofss,l2ues,hdivues,l2pes = amr_loop(model, order, num_amr_steps, αr, αc, 
+  GridapPETSc.with(args=split(options)) do 
+    ls = PETScLinearSolver()
+    final_model,ndofss,l2ues,hdivues,l2pes = amr_loop(ranks,model, order, num_amr_steps, αr, αc, ls,
                                                   generate_vtk_files, redistribute_load)
+  end
   
   # We could plot here the error, like in the tutorial.
 end
 
-function solve_darcy(model,order)  
+function get_amr_solution()
+  γ, r, xc = 100.0, 0.7, VectorValue(-0.05, -0.05)
+  p_exact(x) = atan(γ * (sqrt((x[1] - xc[1])^2 + (x[2] - xc[2])^2) - r))
+  u_exact(x) = -∇(p_exact)(x)
+  f(x) = (∇⋅u_exact)(x)
+  return u_exact, p_exact, f
+end
+
+function solve_darcy(model,order,ls)
+  u_exact, p_exact, f = get_amr_solution()
+
   V = FESpace(model,
               ReferenceFE(raviart_thomas,Float64,order),
               conformity=:Hdiv)
@@ -46,15 +57,17 @@ function solve_darcy(model,order)
   dΓ = Measure(Γ,degree)
   nΓ = get_normal_vector(Γ)
 
-  a((u, p),(v, q)) = ∫(u⋅v)dΩ +∫(q*(∇⋅u))dΩ-∫((∇⋅v)*p)dΩ
-  b((v, q)) = ∫(q*f)dΩ-∫((v⋅nΓ)*p_exact )dΓ
+  a((u, p),(v, q)) = ∫(u⋅v)dΩ + ∫(q*(∇⋅u))dΩ - ∫((∇⋅v)*p)dΩ
+  b((v, q)) = ∫(q*f)dΩ - ∫((v⋅nΓ)*p_exact )dΓ
 
   op = AffineFEOperator(a,b,X,Y)
-  xh = solve(op)
+  xh = solve(ls,op)
   xh, num_free_dofs(Y)
 end 
 
-function compute_error_darcy(model,degree,xh)
+function compute_error_darcy(model,order,xh)
+  u_exact, p_exact, _ = get_amr_solution()
+
   Ω = Triangulation(model)
   degree = 4*(order+1)
   dΩ = Measure(Ω,degree)
@@ -81,21 +94,20 @@ function get_cell_to_parallel_task(model)
   end
 end
 
-function amr_loop(model, order, num_amr_steps, αr, αc, generate_vtk_files, redistribute_load)
+function amr_loop(ranks, model, order, num_amr_steps, αr, αc, ls, generate_vtk_files, redistribute_load)
+  u_exact, p_exact, f = get_amr_solution()
+  adaptive_strategy = FixedFractionAdaptiveFlagsMarkingStrategy(αr, αc)
   
-  adaptive_strategy=
-      FixedFractionAdaptiveFlagsMarkingStrategy(αr, αc)
-  
-  ndofs_x_level=Int[]
-  l2eu_x_level=Float64[]
-  hdiveu_x_level=Float64[]
-  l2pe_x_level=Float64[]
+  ndofs_x_level  = Int[]
+  l2eu_x_level   = Float64[]
+  hdiveu_x_level = Float64[]
+  l2pe_x_level   = Float64[]
   
   dir = datadir("darcy-amr")
   i_am_main(ranks) && !isdir(dir) && mkdir(dir)
   for amr_step = 0:num_amr_steps
     ## Solve the finite element problem in the current mesh
-    xh,ndofs = solve_darcy(model,order)
+    xh,ndofs = solve_darcy(model,order,ls)
     
     if (generate_vtk_files)
       file  = dir*"/results_amr_order=$(order)_step_$(amr_step)"
@@ -110,7 +122,7 @@ function amr_loop(model, order, num_amr_steps, αr, αc, generate_vtk_files, red
     end
     
     ## Compute error among finite element solution and exact solution
-    l2eu,hdiveu,l2ep=compute_error_darcy(model,2*order+1,xh)
+    l2eu,hdiveu,l2ep=compute_error_darcy(model,order,xh)
     append!(l2eu_x_level,l2eu)
     append!(hdiveu_x_level,hdiveu)
     append!(l2pe_x_level,l2ep)
@@ -125,7 +137,7 @@ function amr_loop(model, order, num_amr_steps, αr, αc, generate_vtk_files, red
     e_K = map(dc -> sqrt.(get_array(dc)), local_views(∫(euh⋅euh)dΩ))
 
     ## Get object which describes how the mesh is partitioned/distributed among parallel tasks 
-    model_partition_descriptor=partition(get_cell_gids(model))
+    model_partition_descriptor = partition(get_cell_gids(model))
 
     ## Create/initialize adaptivity flags 
     ref_coarse_flags = map(model_partition_descriptor) do indices
