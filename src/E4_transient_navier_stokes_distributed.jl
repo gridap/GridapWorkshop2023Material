@@ -67,7 +67,7 @@ T  = Tth
 xₕₜ = solve(ode_solver,op,x₀,t₀,T)
 
 dir = datadir("ins_distributed")
-!isdir(dir) && mkdir(dir)
+i_am_main(ranks) && !isdir(dir) && mkdir(dir)
 for (xₕ,t) in xₕₜ
   println(" > Computing solution at time $t")
   uₕ,pₕ = xₕ

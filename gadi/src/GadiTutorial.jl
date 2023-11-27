@@ -1,7 +1,7 @@
 module GadiTutorial
 
 using DrWatson
-using Gridap, GridapDistributed, GridapPETSc, GridapGmsh
+using Gridap, GridapDistributed, GridapPETSc, GridapGmsh, GridapP4est
 using PartitionedArrays
 
 export OPTIONS_CG_JACOBI, OPTIONS_CG_AMG, OPTIONS_MUMPS, OPTIONS_NEUTON_MUMPS
@@ -14,5 +14,6 @@ const OPTIONS_MUMPS = "-pc_type lu -ksp_type preonly -ksp_converged_reason -pc_f
 include("fixes.jl")
 include("poisson_driver.jl")
 include("ins_driver.jl")
+include("amr_driver.jl")
 
 end # module GadiTutorial
