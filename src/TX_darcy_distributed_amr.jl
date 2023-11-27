@@ -82,6 +82,7 @@
 
 # We first start as usual by importing the packages we will need:
 
+using DrWatson
 using Gridap
 using PartitionedArrays
 using GridapDistributed
@@ -218,19 +219,22 @@ function amr_loop(model, order, num_amr_steps, αr, αc;
   hdiveu_x_level=Float64[]
   l2pe_x_level=Float64[]
   
-  for amr_step=0:num_amr_steps
+  dir = datadir("darcy-amr")
+  i_am_main(ranks) && !isdir(dir) && mkdir(dir)
+  for amr_step = 0:num_amr_steps
     ## Solve the finite element problem in the current mesh
-    xh,ndofs=solve_darcy(model,order)
+    xh,ndofs = solve_darcy(model,order)
     
     if (generate_vtk_files)
-       uh,ph = xh
-       writevtk(Triangulation(model), 
-                "results_amr_order=$(order)_step_$(amr_step)",
-                cellfields=["uh"=>uh,
-                            "ph"=>ph,
-                            "euh"=>u_exact-uh,
-                            "eph"=>p_exact-ph,
-                            "partition"=>get_cell_to_parallel_task(model)])
+      file  = dir*"/results_amr_order=$(order)_step_$(amr_step)"
+      uh,ph = xh
+      writevtk(Triangulation(model), 
+               file,
+               cellfields=["uh"=>uh,
+                           "ph"=>ph,
+                           "euh"=>u_exact-uh,
+                           "eph"=>p_exact-ph,
+                           "partition"=>get_cell_to_parallel_task(model)])
     end
     
     ## Compute error among finite element solution and exact solution
@@ -291,14 +295,17 @@ final_model,ndofss,l2ues,hdivues,l2pes=amr_loop(model, order, num_amr_steps, αr
 
 # As usual, it is helpful to visualize how errors decay with the number of degrees of freedom as the mesh is adapted across several adaptation cycles. The following code generates a plot and writes it into a PDF file in the parallel task with identifier 0.
 
-if (MPI.Comm_rank(MPI.COMM_WORLD)==0)
+if i_am_main(ranks)
   using Plots
   plt = plot(xlabel="ndofs",ylabel="L2 error (fluid velocity)",grid=true)
   plot!(plt,title="γ=$(γ), r=$(r), center=$(xc)", yaxis=:log10, xaxis=:log10, linewidth=3)
   plot!(plt,ndofss,l2ues,label="order=$(order) AMR",markershape=:s,markersize=6)
-  savefig(plt, "amr_error_decay_l2eu_order=$(order).pdf" )
-end 
 
+  dir = datadir("darcy-amr")
+  !isdir(dir) && mkdir(dir)
+  filename = datadir("darcy-amr/amr_error_decay_l2eu_order=$(order).pdf")
+  savefig(plt, filename)
+end 
 
 # ## Homework
 # * Deactivate `redistributed_load` in the `amr_loop` function call. Then, observe in ParaView the load distribution among parallel tasks, and compare it against the one in which the load is re-balanced at each step.
