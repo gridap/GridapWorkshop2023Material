@@ -4,7 +4,7 @@ title = "Software install instructions and material"
  
 # GridapWorkshop2023Material
 
-*Latest update: 23/11/2023*
+*Latest update: 27/11/2023*
 
 The practical part of the workshop will consist of instructors' guided hands-on tutorials and exercises.
 This will be carried out  either
