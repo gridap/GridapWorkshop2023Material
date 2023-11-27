@@ -5,10 +5,10 @@ LocalPreferences.toml
 GridapWorkshop.so
 
 # Generated stuff
-notebooks
-scripts
-notebooks-solutions
-scripts-solutions
+# notebooks
+# scripts
+# notebooks-solutions
+# scripts-solutions
 
 # ParaView files
 *.vtu
