@@ -9,18 +9,18 @@ function main_poisson(;nprocs,                  # Number of processors
 end
 
 function main_poisson(distribute,nprocs,ncells,options)
-  ranks  = distribute(LinearIndices((prod(nprocs),)))
+  ranks = distribute(LinearIndices((prod(nprocs),)))
 
   GridapPETSc.with(args=split(options)) do
     domain = (0,1,0,1)
     model = CartesianDiscreteModel(ranks,nprocs,domain,ncells)
 
     order = 2
-    u((x,y)) = (x+y)^order
+    u(x) = (x[1]+x[2])^order
     f(x) = -Δ(u,x)
     reffe = ReferenceFE(lagrangian,Float64,order)
     V = TestFESpace(model,reffe,dirichlet_tags="boundary")
-    U = TrialFESpace(u,V)
+    U = TrialFESpace(V,u)
     Ω = Triangulation(model)
     dΩ = Measure(Ω,2*order)
     a(u,v) = ∫( ∇(v)⋅∇(u) )dΩ
@@ -29,10 +29,6 @@ function main_poisson(distribute,nprocs,ncells,options)
 
     solver = PETScLinearSolver()
     uh = solve(solver,op)
-    #ss = symbolic_setup(solver,get_matrix(op))
-    #ns = numerical_setup(ss,get_matrix(op))
-    #x = pfill(0.0,partition(axes(get_matrix(op),2)))
-    #solve!(x,ns,get_vector(op))
 
     output_file = datadir("poisson")
     writevtk(Ω,output_file,cellfields=["uh"=>uh,"grad_uh"=>∇(uh)])

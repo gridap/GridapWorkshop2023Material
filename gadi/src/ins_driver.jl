@@ -82,7 +82,7 @@ function main_ins(distribute,nprocs,mesh,options,T)
     t₀ = 0.0
     xₕₜ = solve(ode_solver,op,x₀,t₀,T)
 
-    out_dir = datadir("ins")
+    out_dir = datadir("ins_$D")
     (i_am_main(ranks) && !isdir(out_dir)) && mkdir(out_dir)
     for (xₕ,t) in xₕₜ
       i_am_main(ranks) && println(" > Computing solution at time $t")
