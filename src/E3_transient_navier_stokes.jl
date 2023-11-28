@@ -86,8 +86,9 @@
 using Gridap, GridapGmsh
 using DrWatson
 
-msh_file = projectdir("meshes/perforated_plate_tiny.msh")
-model = GmshDiscreteModel(msh_file)
+#hint=# model = 
+#sol=msh_file = projectdir("meshes/perforated_plate_tiny.msh")
+#sol=model = GmshDiscreteModel(msh_file)
 
 # ## FE spaces
 #
@@ -98,11 +99,14 @@ model = GmshDiscreteModel(msh_file)
 D = 2
 k = 2
 
-reffeᵤ = ReferenceFE(lagrangian,VectorValue{D,Float64},k)
-reffeₚ = ReferenceFE(lagrangian,Float64,k-1)
-
-V = TestFESpace(model,reffeᵤ,conformity=:H1,dirichlet_tags=["inlet","walls","cylinder"])
-Q = TestFESpace(model,reffeₚ,conformity=:C0)
+#hint=# reffeᵤ = 
+#hint=# reffeₚ = 
+#hint=# V = 
+#hint=# Q = 
+#sol=reffeᵤ = ReferenceFE(lagrangian,VectorValue{D,Float64},k)
+#sol=reffeₚ = ReferenceFE(lagrangian,Float64,k-1)
+#sol=V = TestFESpace(model,reffeᵤ,conformity=:H1,dirichlet_tags=["inlet","walls","cylinder"])
+#sol=Q = TestFESpace(model,reffeₚ,conformity=:C0)
 
 # ### Exercise 3
 # _Define the boundary conditions for velocity. You should define three functions `u_in`, `u_w` and `u_c` representing the prescribed dirichlet values at $\Gamma_{in}$, $\Gamma_w$ and $\Gamma_c$ respectively._
@@ -112,9 +116,12 @@ const Tth = 2
 const Uₘ = 1.5
 const H  = 0.41
 ξ(t) = (t <= Tth) ? sin(π*t/(2*Tth)) : 1.0
-u_in(x,t::Real) = VectorValue( 4 * Uₘ * x[2] * (H-x[2]) / (H^2) * ξ(t), 0.0 )
-u_w(x,t::Real)  = VectorValue(0.0,0.0)
-u_c(x,t::Real)  = VectorValue(0.0,0.0)
+#hint=# u_in(x,t::Real) = 
+#hint=# u_w(x,t::Real)  = 
+#hint=# u_c(x,t::Real)  = 
+#sol=u_in(x,t::Real) = VectorValue( 4 * Uₘ * x[2] * (H-x[2]) / (H^2) * ξ(t), 0.0 )
+#sol=u_w(x,t::Real)  = VectorValue(0.0,0.0)
+#sol=u_c(x,t::Real)  = VectorValue(0.0,0.0)
 u_in(t::Real)   = x -> u_in(x,t)
 u_w(t::Real)    = x -> u_w(x,t)
 u_c(t::Real)    = x -> u_c(x,t)
@@ -122,11 +129,14 @@ u_c(t::Real)    = x -> u_c(x,t)
 # ### Exercise 4
 # _Define the trial and test spaces for the velocity and pressure fields, as well as the corresponding multi-field spaces._
 
-U = TransientTrialFESpace(V,[u_in,u_w,u_c])
-P = TrialFESpace(Q)
-
-Y = MultiFieldFESpace([V, Q])
-X = TransientMultiFieldFESpace([U, P])
+#hint=# U = 
+#hint=# P = 
+#hint=# Y = 
+#hint=# X = 
+#sol=U = TransientTrialFESpace(V,[u_in,u_w,u_c])
+#sol=P = TrialFESpace(Q)
+#sol=Y = MultiFieldFESpace([V, Q])
+#sol=X = TransientMultiFieldFESpace([U, P])
 
 # ## Nonlinear weak form and FE operator
 #
@@ -148,11 +158,16 @@ conv(u,∇u) = Re*(∇u')⋅u
 # ### Exercise 5
 # _Define the residual $r$ and the `TransientFEOperator` for our problem._
 
-m(t,(u,p),(v,q)) = ∫( ∂t(u)⋅v )dΩ
-a(t,(u,p),(v,q)) = ∫( ∇(v)⊙∇(u) - (∇⋅v)*p + q*(∇⋅u) )dΩ
-c(u,v) = ∫( v⊙(conv∘(u,∇(u))) )dΩ
+#hint=# m(t,(u,p),(v,q)) = 
+#hint=# a(t,(u,p),(v,q)) = 
+#hint=# c(u,v) = 
+#hint=# res(t,(u,p),(v,q)) = 
 
-res(t,(u,p),(v,q)) = m(t,(u,p),(v,q)) + a(t,(u,p),(v,q)) + c(u,v)
+#sol=m(t,(u,p),(v,q)) = ∫( ∂t(u)⋅v )dΩ
+#sol=a(t,(u,p),(v,q)) = ∫( ∇(v)⊙∇(u) - (∇⋅v)*p + q*(∇⋅u) )dΩ
+#sol=c(u,v) = ∫( v⊙(conv∘(u,∇(u))) )dΩ
+#sol=
+#sol=res(t,(u,p),(v,q)) = m(t,(u,p),(v,q)) + a(t,(u,p),(v,q)) + c(u,v)
 op = TransientFEOperator(res,X,Y)
 
 # ## Solver and solution
@@ -165,9 +180,13 @@ op = TransientFEOperator(res,X,Y)
 using LineSearches: BackTracking
 nls = NLSolver(show_trace=true, method=:newton, linesearch=BackTracking())
 
-Δt = 0.01
-θ  = 0.5
-ode_solver = ThetaMethod(nls,Δt,θ)
+#hint=# Δt = 
+#hint=# θ  = 
+#hint=# ode_solver = 
+
+#sol=Δt = 0.01
+#sol=θ  = 0.5
+#sol=ode_solver = ThetaMethod(nls,Δt,θ)
 
 # We can then solve the problem and print the solutions as follows: 
 

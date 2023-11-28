@@ -9,7 +9,6 @@ k = 2
 
 reffeᵤ = ReferenceFE(lagrangian,VectorValue{D,Float64},k)
 reffeₚ = ReferenceFE(lagrangian,Float64,k-1)
-
 V = TestFESpace(model,reffeᵤ,conformity=:H1,dirichlet_tags=["inlet","walls","cylinder"])
 Q = TestFESpace(model,reffeₚ,conformity=:C0)
 
@@ -26,7 +25,6 @@ u_c(t::Real)    = x -> u_c(x,t)
 
 U = TransientTrialFESpace(V,[u_in,u_w,u_c])
 P = TrialFESpace(Q)
-
 Y = MultiFieldFESpace([V, Q])
 X = TransientMultiFieldFESpace([U, P])
 
@@ -50,6 +48,7 @@ op = TransientFEOperator(res,X,Y)
 
 using LineSearches: BackTracking
 nls = NLSolver(show_trace=true, method=:newton, linesearch=BackTracking())
+
 
 Δt = 0.01
 θ  = 0.5

@@ -16,7 +16,7 @@ reffeₚ = ReferenceFE(lagrangian,Float64,k-1)
 V = TestFESpace(model,reffeᵤ,conformity=:H1,dirichlet_tags=["inlet","walls","cylinder"])
 Q = TestFESpace(model,reffeₚ,conformity=:C0)
 
-const Tth = 2
+const Tth = 1
 const Uₘ = 1.5
 const H  = 0.41
 ξ(t) = (t <= Tth) ? sin(π*t/(2*Tth)) : 1.0
@@ -26,6 +26,7 @@ u_c(x,t::Real)  = VectorValue(0.0,0.0)
 u_in(t::Real)   = x -> u_in(x,t)
 u_w(t::Real)    = x -> u_w(x,t)
 u_c(t::Real)    = x -> u_c(x,t)
+
 
 U = TransientTrialFESpace(V,[u_in,u_w,u_c])
 P = TrialFESpace(Q)
@@ -43,7 +44,6 @@ dΓ_out = Measure(Γ_out,degree)
 
 const Re = 100.0
 conv(u,∇u) = Re*(∇u')⋅u
-dconv(du,∇du,u,∇u) = conv(u,∇du)+conv(du,∇u)
 
 m((u,p),(v,q)) = ∫( u⋅v )dΩ
 a((u,p),(v,q)) = ∫( ∇(v)⊙∇(u) - (∇⋅v)*p + q*(∇⋅u) )dΩ
@@ -55,9 +55,11 @@ jac(t,(u,p),(du,dp),(v,q)) = a((du,dp),(v,q)) + dc(u,du,v)
 jac_t(t,(u,p),(dut,dpt),(v,q)) = m((dut,dpt),(v,q))
 op = TransientFEOperator(res,jac,jac_t,X,Y)
 
-nls = Gridap.Algebra.NewtonRaphsonSolver(LUSolver(),1.e-6,10)
-Δt  = 0.01
-θ   = 0.5
+using Gridap.Algebra
+nls = NewtonRaphsonSolver(LUSolver(),1.e-6,10)
+
+Δt = 0.01
+θ  = 0.5
 ode_solver = ThetaMethod(nls,Δt,θ)
 
 x₀ = interpolate_everywhere([VectorValue(0.0,0.0),0.0],X(0.0))
