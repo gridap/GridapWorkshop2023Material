@@ -1,6 +1,6 @@
 # ## Introduction
 
-# In this tutorial we will learn how to use [`GridapODEs.jl`](https://github.com/gridap/GridapODEs.jl) for approximating transient PDEs by using time marching schemes (method of lines). We consider the *heat equation*, a.k.a. the transient Poisson equation.
+# In this tutorial we will learn how to use Gridap for approximating transient PDEs by using time marching schemes (method of lines). We consider the *heat equation*, a.k.a. the transient Poisson equation.
 
 # ## Problem statement
 
