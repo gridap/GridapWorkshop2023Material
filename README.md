@@ -4,7 +4,7 @@ title = "Software install instructions and material"
  
 # GridapWorkshop2023Material
 
-*Latest update: 23/11/2023*
+*Latest update: 27/11/2023*
 
 The practical part of the workshop will consist of instructors' guided hands-on tutorials and exercises.
 This will be carried out  either
@@ -68,9 +68,17 @@ Then, press `]` to enter the package manager and run
 
 ```julia
 (GridapWorkshop) pkg> instantiate
+(GridapWorkshop) pkg> update
+(GridapWorkshop) pkg> build
 ```
 
 to install and precompile all the packages needed for the workshop. This may take a while.
+
+To render Jypyter notebooks interactively, you also need to run the following:
+
+```bash
+  julia -e'using Pkg; Pkg.add("IJulia")'
+```
 
 More information on Julia Environments can be found [here](https://pkgdocs.julialang.org/v1/environments/).
 
@@ -111,6 +119,7 @@ Next, repeat the steps described in the previous section to setup the Julia envi
 In addition, you will need to setup the environment for parallel. To do so, run the following commands on the terminal:
 
 ```bash
+julia -e'using Pkg; Pkg.add("MPIPreferences")'
 julia --project=. -e 'using MPIPreferences; MPIPreferences.use_system_binary()'
 julia --project=. -e 'using Pkg; Pkg.build()'
 ```
@@ -135,23 +144,16 @@ First, we will need to install `PackageCompiler` package. It does not need to be
 julia -e 'using Pkg; Pkg.add("PackageCompiler")'
 ```
 
-Next, run the following commands from the `/gadi` directory to create the system image
+Next, run the following commands from the `/gadi` directory to launch a remote job that creates the system image
 
 ```bash
-julia --project=. compilation/compile.jl
+qsub compile/compile.sh
 ```
 
-This will take a while (around 5/6 mins), and will create a system image `GadiTutorial.so` in the `/gadi` directory. You can then test this sysimage by running
+This will take a while (around 30 mins), and will create a system image `GadiTutorial.so` in the `/gadi` directory. You can see the status of the job by running `qstat`.
+
+You can then test this sysimage by running
 
 ```bash
-julia --project=. -JGadiTutorial.so compilation/warmup.jl
+julia --project=. -JGadiTutorial.so compile/warmup.jl
 ```
-
-Alternatively, we have also provided a BATCH script that creates the system image on a compute node. This is useful if the architecture of the compute nodes is different from the login nodes (for instance, when running on GPU nodes). It is also good practice to not run heavy computations on the login nodes. To run compile remotely, run
-
-```bash
-qsub compilation/compile.sh
-```
-
-You can see the status of the job by running `qstat`.
-
