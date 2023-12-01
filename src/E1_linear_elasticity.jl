@@ -35,12 +35,13 @@
 # On top of it's mesh-generation functionalities, Gridap provides a convenient ways to read and write discrete models from and to files. We import the model for this problem from `GMSH` as follows:
 
 using Gridap, GridapGmsh
+using Gridap.Io
 using DrWatson
 
 msh_file_gmsh = projectdir("meshes/elasticity.msh")
 model = GmshDiscreteModel(msh_file_gmsh)
 
-# This model contains the mesh and the physical tags of the model, which have been created directly through `GMSH`. Another option would be to create the model using Gridap, then exporting to `.json` format in the followig way: 
+# This model contains the mesh and the physical tags of the model, which have been created directly through `GMSH`. Another option would be to create the model using Gridap, then exporting to `.json` format in the following way: 
 
 msh_file_json = projectdir("meshes/elasticity.json")
 to_json_file(model,msh_file_json)
