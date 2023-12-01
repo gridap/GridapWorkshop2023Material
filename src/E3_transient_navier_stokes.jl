@@ -1,6 +1,6 @@
 # ## Problem statement
 #
-# The goal is to solve a time-dependent nonlinear multi-field PDE. As a model problem, we consider a well known benchmark in computational fluid dynamics, the laminar flow around a cyclinder for the transient incompressible Navier-Stokes equations. We will solve this problem by building on the previous exercise.
+# The goal is to solve a time-dependent nonlinear multi-field PDE. As a model problem, we consider a well known benchmark in computational fluid dynamics, the laminar flow around a cylinder for the transient incompressible Navier-Stokes equations. We will solve this problem by building on the previous exercise.
 #
 # Like in the previous exercise, the computational domain $\Omega$ is a 2-dimensional channel. The fluid enters the channel from the left boundary (inlet) and exits through the right boundary (outlet). The channel has a cylindrical obstacle near the inlet. The domain can be seen in the following figure:
 #
@@ -60,7 +60,7 @@
 # $$
 #
 # The weak form associated to these interpolation spaces reads: find $(u,p)\in U_g \times Q$ such that $[r(u,p)](v,q)=0$ for all $(v,q)\in V_0 \times Q$
-# where $U_g$ and $V_0$ are the set of functions in $V$ fulfilling the Dirichlet boundary conditions and the homogeneous Dirichlet boundary conditions respetively. The weak residual $r$ evaluated at a given pair $(u,p)$ is the linear form defined as
+# where $U_g$ and $V_0$ are the set of functions in $V$ fulfilling the Dirichlet boundary conditions and the homogeneous Dirichlet boundary conditions respectively. The weak residual $r$ evaluated at a given pair $(u,p)$ is the linear form defined as
 #
 # $$
 # [r(t,(u,p))](v,q) \doteq m(t,(u,p),(v,q)) + a(t,(u,p),(v,q)) + [c(u)](v),
@@ -94,7 +94,7 @@ using DrWatson
 #
 # ### Exercise 2
 # 
-# _Define the test FE spaces for teh velocity and pressure, using the same discretisations as in the previous exercise._
+# _Define the test FE spaces for the velocity and pressure, using the same discretisations as in the previous exercise._
 #
 D = 2
 k = 2

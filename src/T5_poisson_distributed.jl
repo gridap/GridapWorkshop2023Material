@@ -61,7 +61,7 @@ ghost_cell_to_local_cell  = map(ghost_to_local,partition(cell_gids))
 # We can then continue by creating a `DistributedFESpace`, which (like `DistributedDiscreteModel`) is a structure that contains: 
 #   - A distributed array of serial (overlapped) `FESpace`s
 #   - The Owned/Ghost layout for the DoFs
-# In this specific example here, and just for clarity, we do not impose any Dirichlet boundary conditions. Since the Poisson problem is defined up to a constant, and therefore is not uniquely defined without any dirichlet boundary conditions, the problem will not be well-posed. However, this is not a problem for the purpose of this tutorial.
+# In this specific example here, and just for clarity, we do not impose any Dirichlet boundary conditions. Since the Poisson problem is defined up to a constant, and therefore is not uniquely defined without any Dirichlet boundary conditions, the problem will not be well-posed. However, this is not a problem for the purpose of this tutorial.
 
 feorder = 1
 reffe = ReferenceFE(lagrangian,Float64,feorder)

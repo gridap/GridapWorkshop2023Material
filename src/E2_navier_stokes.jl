@@ -1,6 +1,6 @@
 # ## Problem statement
 #
-# The goal is to solve a nonlinear multi-field PDE. As a model problem, we consider a well known benchmark in computational fluid dynamics, the laminar flow around a cyclinder for the incompressible Navier-Stokes equations. We will solve this problem by building on the concepts seen in the previous tutorials.
+# The goal is to solve a nonlinear multi-field PDE. As a model problem, we consider a well known benchmark in computational fluid dynamics, the laminar flow around a cylinder for the incompressible Navier-Stokes equations. We will solve this problem by building on the concepts seen in the previous tutorials.
 #
 # The computational domain $\Omega$ is a 2-dimensional channel. The fluid enters the channel from the left boundary (inlet) and exits through the right boundary (outlet). The channel has a cylindrical obstacle near the inlet. The domain can be seen in the following figure:
 # 
@@ -48,7 +48,7 @@
 # $$
 #
 # The weak form associated to these interpolation spaces reads: find $(u,p)\in U_g \times Q$ such that $[r(u,p)](v,q)=0$ for all $(v,q)\in V_0 \times Q$
-# where $U_g$ and $V_0$ are the set of functions in $V$ fulfilling the Dirichlet boundary conditions and the homogeneous Dirichlet boundary conditions respetively. The weak residual $r$ evaluated at a given pair $(u,p)$ is the linear form defined as
+# where $U_g$ and $V_0$ are the set of functions in $V$ fulfilling the Dirichlet boundary conditions and the homogeneous Dirichlet boundary conditions respectively. The weak residual $r$ evaluated at a given pair $(u,p)$ is the linear form defined as
 #
 # $$
 # [r(u,p)](v,q) \doteq a((u,p),(v,q))+ [c(u)](v),

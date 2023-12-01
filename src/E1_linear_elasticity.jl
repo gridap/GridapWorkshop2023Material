@@ -157,7 +157,7 @@ vh = zero(U)
 #
 # _Why do the results at the contour of $\Gamma_{\rm B}$ look weird?_
 #
-# The reason is because we are enforcing the Dirichlet values _only in the interior_ of the Dirichlet regions. So, in the contour of $\Gamma_{\rm B}$ the x-component of the DoF values must be zero. We can use the tag names of the model ending with `_c` to enforce the Dirichlet conditons on the boundary closure too.
+# The reason is because we are enforcing the Dirichlet values _only in the interior_ of the Dirichlet regions. So, in the contour of $\Gamma_{\rm B}$ the x-component of the DoF values must be zero. We can use the tag names of the model ending with `_c` to enforce the Dirichlet conditions on the boundary closure too.
 #
 # ## From weak form to visualising the Solution
 #
