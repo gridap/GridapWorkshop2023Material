@@ -1,4 +1,5 @@
 using Gridap, GridapGmsh
+using Gridap.Io
 using DrWatson
 
 msh_file_gmsh = projectdir("meshes/elasticity.msh")
