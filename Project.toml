@@ -13,5 +13,16 @@ MPI = "da04e1cc-30fd-572f-bb4f-1f8673147195"
 PartitionedArrays = "5a9dfac6-5c52-46f7-8278-5e2210713be9"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 
+[compat]
+DrWatson="2.13.0"
+Gridap="0.17.20"
+GridapDistributed="0.3.4"
+GridapGmsh="0.7.0"
+GridapP4est="0.3.3"
+LineSearches="7.2.0"
+MPI="0.20.19"
+PartitionedArrays="0.3.4"
+Plots="1.39.0"
+
 [extras]
 MPIPreferences = "3da0fdf6-3ccc-4f1b-acd9-58baa6c99267"
