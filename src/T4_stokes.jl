@@ -1,6 +1,6 @@
 # ## Problem statement 
 #
-# The goal is to solve a nonlinear multi-field PDE. As a model problem, we consider a well known benchmark in computational fluid dynamics, the lid-driven cavity benchmark for the incompressible Stokes equations at low Reynolds numbers.
+# The goal is to solve a linear multi-field PDE with saddle point structure. As a model problem, we consider a well known benchmark in computational fluid dynamics, the lid-driven cavity benchmark for the incompressible Stokes equations at low Reynolds numbers.
 # We will be using a mixed finite-element with a well know inf-sup stable element pair $Q_{k}/P_{k-1}^-$ for velocity/pressure.
 #
 # Formally, the PDE we want to solve is: find the velocity vector $u$ and the pressure $p$ such that
